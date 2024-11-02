@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">TjFinder</string>
+
+    <string name="text_home">홈</string>
+
+    <string name="text_playlist">플레이리스트</string>
+
+    <string name="text_newsongs">신곡</string>
+
+    <string name="text_search">검색</string>
+
+    <string name="text_user">프로필</string>
+    <string name="text_user_setting">설정</string>
+
+    <string name="default_web_client_id">25543212545-7i94qlvl4j74onfk8bs26m588rhdt66e.apps.googleusercontent.com</string>
+</resources>

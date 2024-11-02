@@ -1,0 +1,96 @@
+package kr.blugon.tjfinder.ui.layout
+
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.basicMarquee
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.TextUnitType
+import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.launch
+import kr.blugon.tjfinder.R
+import kr.blugon.tjfinder.module.BlugonTJApi.memoList
+import kr.blugon.tjfinder.module.BlugonTJApi.removeMemo
+import kr.blugon.tjfinder.module.BlugonTJApi.setMemo
+import kr.blugon.tjfinder.module.Song
+import kr.blugon.tjfinder.module.User
+import kr.blugon.tjfinder.ui.layout.card.songcard.highLightColor
+import kr.blugon.tjfinder.ui.layout.card.songcard.splitHighlight
+import kr.blugon.tjfinder.ui.theme.Pretendard
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun EditMemoPopup(
+    song: Song,
+    user: User?,
+    isVisible: Boolean,
+    setVisible: (Boolean) -> Unit,
+    memo: String,
+    setMemo: (String) -> Unit,
+    highlight: String? = null,
+) {
+    val coroutineScope = rememberCoroutineScope()
+
+    Row(
+        modifier = Modifier
+            .padding(10.dp, 5.dp, 0.dp, 10.dp)
+            .clickable {
+                setVisible(true)
+            },
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon( // 메모 아이콘
+            modifier = Modifier
+                .size(21.dp),
+            imageVector = ImageVector.vectorResource(R.drawable.memo),
+            contentDescription = "memo",
+            tint = Color.White
+        )
+        Box( //스크롤 애니메이션 블러
+            modifier = Modifier
+                .fillMaxWidth(0.9f)
+                .padding(1.dp, 0.dp)
+                .graphicsLayer { alpha = 0.99f }
+                .horizontalScrollAnimeBlur()
+        ) {
+            Row( //스크롤 애니메이션
+                modifier = Modifier
+                    .basicMarquee(iterations = Int.MAX_VALUE, velocity = 60.dp, repeatDelayMillis = 3000)
+                    .padding(start = 5.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Absolute.Left
+            ) { //위 왼쪽
+                memo.splitHighlight(highlight).forEach {
+                    Text(
+                        text = it,
+                        color = if(it.lowercase() == highlight?.lowercase()) highLightColor else Color.White,
+                        fontFamily = Pretendard,
+                        fontWeight = FontWeight.Medium,
+                        fontSize = TextUnit(14f, TextUnitType.Sp),
+                        maxLines = 1
+                    )
+                }
+            }
+        }
+        if(isVisible) {
+            TextConfirmCancelModal(defaultValue = memo, placeHolder = "메모", setShowModal = {setVisible(it)}) {
+                coroutineScope.launch {
+                    if(user!!.memoList() == null) return@launch
+                    setMemo(it) //클라이언트 반영
+                    if(it.isBlank()) user.removeMemo(song.id) //서버 업로드
+                    else user.setMemo(song.id, it) //서버 업로드2
+                }
+            }
+        }
+    }
+}
