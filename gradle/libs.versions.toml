@@ -1,0 +1,83 @@
+[versions]
+kotlin = "1.9.22"
+android = "8.2.2"
+google_services = "4.4.2"
+#lib
+coreKtx = "1.13.1"
+lifecycleRuntimeKtx = "2.8.6"
+activityCompose = "1.9.3"
+composeBom = "2024.10.00"
+navigationCompose = "2.8.3"
+json = "20240205"
+securityCryptoKtx = "1.0.0"
+junit = "4.13.2"
+extJunit = "1.2.1"
+espressoCore = "3.6.1"
+
+fuel = "3.0.0-alpha1"
+
+firebaseAuth = "23.1.0"
+playServicesAuth = "21.2.0"
+
+coilCompose = "2.0.0-rc01"
+
+lazycolumnscrollbar = "1.10.0"
+accompanistSystemuicontroller = "0.34.0"
+
+retrofit = "2.11.0"
+gson = "2.11.0"
+moshi = "latest.release"
+
+sqlite = "2.5.0-alpha10"
+room = "2.6.1"
+
+jsoup = "1.18.1"
+
+[plugins]
+kotlin = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+android = { id = "com.android.application", version.ref = "android" }
+googleServices = { id = "com.google.gms.google-services", version.ref = "google_services" }
+
+
+[libraries]
+coreKtx = { module = "androidx.core:core-ktx", version.ref = "coreKtx" }
+lifecycleRuntimeKtx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
+activityCompose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
+composeBom = { module = "androidx.compose:compose-bom", version.ref = "composeBom" }
+ui = { module = "androidx.compose.ui:ui" }
+uiGraphics = { module = "androidx.compose.ui:ui-graphics" }
+uiToolingPreview = { module = "androidx.compose.ui:ui-tooling-preview" }
+uiTooling = { module = "androidx.compose.ui:ui-tooling" }
+uiTestManifest = { module = "androidx.compose.ui:ui-test-manifest" }
+material3 = { module = "androidx.compose.material3:material3" }
+navigationCompose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
+json = { module = "org.json:json", version.ref = "json" }
+securityCryptoKtx = { module = "androidx.security:security-crypto-ktx", version.ref = "securityCryptoKtx" }
+junit = { module = "junit:junit", version.ref = "junit" }
+extJunit = { module = "androidx.test.ext:junit", version.ref = "extJunit" }
+uiTestJunit4 = { module = "androidx.compose.ui:ui-test-junit4" }
+espressoCore = { module = "androidx.test.espresso:espresso-core", version.ref = "espressoCore" }
+
+fuel = { module = "com.github.kittinunf.fuel:fuel", version.ref = "fuel" }
+
+firebaseAuth = { module = "com.google.firebase:firebase-auth", version.ref = "firebaseAuth" }
+playServicesAuth = { module = "com.google.android.gms:play-services-auth", version.ref = "playServicesAuth" }
+
+coilCompose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
+
+lazycolumnscrollbar = { module = "com.github.nanihadesuka:LazyColumnScrollbar", version.ref = "lazycolumnscrollbar" }
+accompanistSystemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanistSystemuicontroller" }
+
+retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
+converterGson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit" }
+gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
+moshi = { module = "com.squareup.moshi:moshi", version.ref = "moshi" }
+
+sqlite = { module = "androidx.sqlite:sqlite", version.ref = "sqlite"}
+sqliteBundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "sqlite" }
+
+room = { module = "androidx.room:room-gradle-plugin", version.ref = "room" }
+roomCompiler = { module = "androidx.room:room-compiler", version.ref = "room" }
+roomRuntime = { module = "androidx.room:room-runtime", version.ref = "room" }
+
+jsoup = { module = "org.jsoup:jsoup", version.ref = "jsoup" }
