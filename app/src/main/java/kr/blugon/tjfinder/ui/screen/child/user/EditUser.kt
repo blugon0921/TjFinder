@@ -156,14 +156,11 @@ fun EditUserScreen(navController: NavController) {
                     }
                 }
             )
-        }
+        },
+        containerColor = Color.Transparent
     ) {
         Column (
-            modifier = Modifier
-                .fillMaxSize()
-                .clickable(interactionSource = interactionSource, indication = null) {
-                    focusManager.clearFocus()
-                },
+            modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -206,6 +203,7 @@ fun EditUserScreen(navController: NavController) {
                 label = "소개",
                 value = description,
                 maxLength = 100,
+                maxLines = 10,
                 isEssential = false,
                 keyboardManager = keyboardManager,
             )
@@ -254,8 +252,9 @@ fun EditUserScreen(navController: NavController) {
                                     return@launch Toast.makeText(context, "이름을 입력해주세요", Toast.LENGTH_SHORT).show()
                                 }.trim()),
 
-                                defaultDescription.trim() == description.value.trim() ||
-                                user!!.editDescription(description.value.trim()),
+                                defaultDescription.trim().trim('\n') ==
+                                    description.value.trim().trim('\n') ||
+                                user!!.editDescription(description.value.trim().trim('\n')),
 
                                 defaultIsPrivate == isPrivate.value ||
                                 user!!.editIsPrivate(isPrivate.value),

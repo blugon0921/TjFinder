@@ -137,7 +137,11 @@ object BlugonTJApi {
             withContext(Dispatchers.IO) {
                 URLEncoder.encode(uid, "utf-8")
             }
-        }&description=$description"
+        }&description=${
+            withContext(Dispatchers.IO) {
+                URLEncoder.encode(description, "utf-8")
+            }
+        }"
         val body = url.httpGet().body
         val json = JSONObject(body)
         return json.getInt("code") == 200

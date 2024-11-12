@@ -33,8 +33,10 @@ import kr.blugon.tjfinder.ui.theme.ThemeColor
 class SettingCategory(val name: String, val code: String) {
     companion object {
         val TestFunction = SettingCategory("실험적 기능", "TestFunction")
+        val Etc = SettingCategory("기타", "Etc")
         val entries = listOf(
-            TestFunction
+            TestFunction,
+            Etc
         )
     }
 }
@@ -49,13 +51,21 @@ class SettingType <T> (
     companion object {
         val suggestPlaylist = SettingType(
             SettingCategory.TestFunction,
-            "홈화면에 플레이리스트\n추천목록 표시",
+            "홈화면에 플레이리스트 추천목록 표시",
             "suggestPlaylist",
             SettingValueType.Boolean,
             false
         )
+        val showFurigana = SettingType(
+            SettingCategory.Etc,
+            "일본어 곡 가사에 후리가나 표시",
+            "showFurigana",
+            SettingValueType.Boolean,
+            true
+        )
         val entries = listOf(
             suggestPlaylist,
+            showFurigana
         )
     }
 }
@@ -73,8 +83,10 @@ enum class SettingValueType {
 fun SettingScreen(navController: NavController) {
     val context = LocalContext.current
 
-    var suggestPlaylistValue by remember { mutableStateOf(SettingManager.getSetting(context, SettingType.suggestPlaylist)) }
-
+    val settingValues = remember { mutableMapOf(
+        SettingType.suggestPlaylist to mutableStateOf(SettingManager.getSetting(context, SettingType.suggestPlaylist)),
+        SettingType.showFurigana to mutableStateOf(SettingManager.getSetting(context, SettingType.showFurigana)),
+    ) }
 
     val keyboardManager = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
@@ -110,30 +122,7 @@ fun SettingScreen(navController: NavController) {
                 SettingCard(category.name) {
                     for(setting in SettingType.entries) {
                         if(setting.category != category) continue
-                        SettingItem(settingText = setting.name) {
-                            when (setting.valueType) {
-                                SettingValueType.String -> {}//TODO
-                                SettingValueType.Int -> {}
-                                SettingValueType.Long -> {}//TODO
-                                SettingValueType.Float -> {}//TODO
-                                SettingValueType.Boolean -> { //Boolean
-                                    Switch(
-                                        checked = suggestPlaylistValue,
-                                        onCheckedChange = {
-                                            suggestPlaylistValue = it
-                                            SettingManager.setSetting(context, setting, suggestPlaylistValue)
-                                        },
-                                        colors = SwitchDefaults.colors(
-                                            checkedTrackColor = ThemeColor.Main,
-                                            uncheckedTrackColor = ThemeColor.MainGray,
-                                            uncheckedBorderColor = ThemeColor.MainGray,
-                                            uncheckedThumbColor = ThemeColor.Main,
-                                            checkedThumbColor = Color.White
-                                        )
-                                    )
-                                }
-                            }
-                        }
+                        SettingItem(setting, settingValues[setting]!!)
                     }
                 }
             }

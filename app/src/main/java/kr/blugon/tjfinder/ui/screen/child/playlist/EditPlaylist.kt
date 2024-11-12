@@ -142,7 +142,8 @@ fun EditPlaylistScreen(navController: NavController) {
                     }
                 }
             )
-        }
+        },
+        containerColor = Color.Transparent
     ) {
         Column (
             modifier = Modifier.fillMaxSize(),

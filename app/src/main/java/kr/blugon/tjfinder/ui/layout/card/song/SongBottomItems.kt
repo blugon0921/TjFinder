@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
 import kotlinx.coroutines.launch
 import kr.blugon.tjfinder.R
@@ -16,10 +17,7 @@ import kr.blugon.tjfinder.module.PlaylistSong
 import kr.blugon.tjfinder.module.Song
 import kr.blugon.tjfinder.module.User
 import kr.blugon.tjfinder.module.search.SearchInfo
-import kr.blugon.tjfinder.ui.layout.BottomScreen
-import kr.blugon.tjfinder.ui.layout.BottomSheetItem
-import kr.blugon.tjfinder.ui.layout.ChildScreen
-import kr.blugon.tjfinder.ui.layout.navigateScreen
+import kr.blugon.tjfinder.ui.layout.*
 import kr.blugon.tjfinder.ui.screen.child.playlist.InPlaylist
 import kr.blugon.tjfinder.ui.screen.initValue
 
@@ -27,7 +25,8 @@ import kr.blugon.tjfinder.ui.screen.initValue
 fun SongBottomItems(
     song: Song,
     user: User,
-    setShowBottomSheet: (Boolean) -> Unit,
+    showBottomSheet: MutableState<Boolean>,
+    showLyrics: MutableState<Boolean>,
     navController: NavController,
 ) {
     val context = LocalContext.current
@@ -53,9 +52,13 @@ fun SongBottomItems(
                 }
             }
             BottomSheetItem(iconId = R.drawable.user, iconDescription = "search", text = "해당 가수 검색") { //가수 검색
-                setShowBottomSheet(false)
+                showBottomSheet.value = false
                 initValue = SearchInfo(song.singer)
                 navController.navigateScreen(BottomScreen.Search)
+            }
+            BottomSheetItem(iconId = R.drawable.file, iconDescription = "lyrics", text = "가사") {
+                showLyrics.value = true
+                showBottomSheet.value = false
             }
         }
     }

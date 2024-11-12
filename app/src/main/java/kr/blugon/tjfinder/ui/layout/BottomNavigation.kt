@@ -18,6 +18,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -122,7 +123,14 @@ fun NavController.navigateScreen(screen: Screen) {
 //        selectedTab = if(screen is BottomScreen) screen else (screen as ChildScreen).parent
 //        if(screen is BottomScreen) return
 //    }
-    this.navigate(screen.name)
+    if(this.currentBackStackEntry?.destination?.route == screen.name) return
+    this.navigate(screen.name) {
+        popUpTo(this@navigateScreen.graph.findStartDestination().id) {
+            saveState = true
+        }
+        launchSingleTop = true
+        restoreState = true
+    }
 }
 
 

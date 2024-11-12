@@ -39,7 +39,7 @@ fun SongCard(
         user = User.login(context)?: return@LaunchedEffect
     }
 
-    var showBottomSheet by remember { mutableStateOf(false) }
+    val showBottomSheet = remember { mutableStateOf(false) }
     Box(
         modifier = Modifier
             .fillMaxWidth(0.875f)
@@ -65,7 +65,7 @@ fun SongCard(
             ) {
                 SongCardId(song, numberPrefix, highlight)
                 EllipsisOption(onClick = { //땡땡떙옵션
-                    showBottomSheet = true
+                    showBottomSheet.value = true
                 })
             }
             SongCardTitle(song, highlight) //Title
@@ -82,11 +82,12 @@ fun SongCard(
 
 
     val sheetState = rememberModalBottomSheetState()
-    if(showBottomSheet) {
+    val showLyrics = remember { mutableStateOf(false) }
+    if(showBottomSheet.value) {
         BottomSheet(
             sheetState = sheetState,
             onDismiss = {
-                showBottomSheet = false
+                showBottomSheet.value = false
             },
             topBar = {
                 Column( //이름
@@ -112,8 +113,11 @@ fun SongCard(
                 }
             },
         ) {
-            SongBottomItems(song = song, user = user!!, setShowBottomSheet = {showBottomSheet = it}, navController = navController)
+            SongBottomItems(song = song, user = user!!, showBottomSheet = showBottomSheet, showLyrics, navController = navController)
         }
+    }
+    if(showLyrics.value) {
+        LyricsLayout(song, showLyrics)
     }
 }
 

@@ -12,8 +12,8 @@ android {
         applicationId = "kr.blugon.tjfinder"
         minSdk = 28
         targetSdk = 34
-        versionCode = 13
-        versionName = "beta_v1.6.0"
+        versionCode = 14
+        versionName = "beta_v1.6.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -94,6 +94,7 @@ dependencies {
 //    implementation(libs.roomCompiler)
 
     implementation(libs.jsoup)
+//    implementation(libs.koalanlpKmr)
 }
 
 apply(plugin = "com.google.gms.google-services")

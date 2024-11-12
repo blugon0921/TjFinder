@@ -26,6 +26,7 @@ import kr.blugon.tjfinder.ui.theme.ThemeColor
 fun EditTextField(
     label: String,
     maxLength: Int,
+    maxLines: Int = 1,
     value: MutableState<String>,
     isEssential: Boolean = true,
     keyboardManager: SoftwareKeyboardController?
@@ -51,16 +52,21 @@ fun EditTextField(
                 color = if(isEssential && value.value.isBlank()) ThemeColor.RedGray else ThemeColor.LightGray,
                 fontSize = 18f,
                 textAlign = TextAlign.Center,
-                maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
         },
-        singleLine = true,
-        keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Text,
-            imeAction = ImeAction.Done
+        maxLines = maxLines,
+//        singleLine = maxLength <= 1,
+        keyboardOptions = KeyboardOptions.Default.copy(
+            imeAction = if(maxLines <= 1) ImeAction.Done else ImeAction.Default,
         ),
         keyboardActions = KeyboardActions(onDone = { keyboardManager?.hide() }),
+//        if(maxLines <= 1) KeyboardActions(onDone = { keyboardManager?.hide() })
+//        else KeyboardActions(onDone = {
+//            if(value.value.count { it == '\n' } < maxLines) {
+//                value.value += "\n"
+//            }
+//        }),
         isError = isEssential && value.value.isBlank(),
     )
 }

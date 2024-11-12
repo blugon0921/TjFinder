@@ -1,6 +1,8 @@
 package kr.blugon.tjfinder.module
 
 import kr.blugon.tjfinder.module.BlugonTJApi.getMemo
+import kr.blugon.tjfinder.ui.layout.lyricsList
+import org.jsoup.Jsoup
 import java.io.Serializable
 
 
@@ -15,6 +17,26 @@ open class Song(
     open val isMR: Boolean = false,
 ): Serializable {
     val memo: String? get() = memoList[id]
+    val lyrics: Lyrics? get() {
+        if(lyricsList[id] != null) return lyricsList[id]!!
+        val jsoup = Jsoup.connect("https://www.tjmedia.co.kr/2006_renew/ZillerGasaService/gasa_view2.asp?pro=${this.id}")
+        val document = try { jsoup.get() } catch (e: Exception) { return null }
+        val lyricsDocument = document.select("#spanscroll > table > tbody > tr > td > pre:nth-child(4)").firstOrNull()?: return null
+        val lyrics = Lyrics(lyricsDocument.html()
+            .replace("\t", "")
+            .replace("<br>", "\n")
+            .replace("\n\n", "\n")
+            .trimEnd('\n')
+            .replace("＜", "")
+            .replace("＞", ""))
+        lyricsList[id] = lyrics
+        return lyrics
+    }
+
+    private fun String.removeTextBetweenBrackets(): String {
+        // 정규식을 사용하여 「과 」사이에 있는 글자를 찾아 제거합니다.
+        return this.replace(Regex("「.*?」"), "").replace("\t", "")
+    }
 }
 
 class Top100Song(

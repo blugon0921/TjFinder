@@ -1,8 +1,5 @@
 package kr.blugon.tjfinder.module
 
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
-import okio.IOException
 import org.jsoup.Jsoup
 import java.net.URLEncoder
 
