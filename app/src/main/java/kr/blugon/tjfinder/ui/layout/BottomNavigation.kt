@@ -7,13 +7,14 @@ import androidx.compose.animation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
@@ -125,9 +126,6 @@ fun NavController.navigateScreen(screen: Screen) {
 //    }
     if(this.currentBackStackEntry?.destination?.route == screen.name) return
     this.navigate(screen.name) {
-        popUpTo(this@navigateScreen.graph.findStartDestination().id) {
-            saveState = true
-        }
         launchSingleTop = true
         restoreState = true
     }
@@ -145,12 +143,15 @@ fun BottomNav(navController: NavHostController, mainActivity: MainActivity) {
             mainActivity.finish()
             return@BackHandler
         }
-        if(currentScreen !is BottomScreen) return@BackHandler
-        else if (currentScreen == BottomScreen.Home) {
-            mainActivity.finish()
-            return@BackHandler
+        when (currentScreen) {
+            BottomScreen.Home -> {
+                mainActivity.finish()
+                return@BackHandler
+            }
+            is BottomScreen -> navController.navigateScreen(BottomScreen.Home)
+
+            else -> navController.navigateUp()
         }
-        navController.navigateScreen(BottomScreen.Home)
     }
     if(Screen.valueOf(backStackEntry?.destination?.route?: "")?.isFullScreen == true) return BottomNavHost(navController = navController, mainActivity)
 
@@ -161,7 +162,7 @@ fun BottomNav(navController: NavHostController, mainActivity: MainActivity) {
             NavigationBar(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .fillMaxHeight(0.075f)
+                    .height(65.dp)
                     .clip(RoundedCornerShape(14.dp, 14.dp, 0.dp, 0.dp)),
                 containerColor = ThemeColor.Navigation
             ) {
