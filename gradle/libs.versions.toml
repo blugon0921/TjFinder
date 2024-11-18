@@ -32,7 +32,7 @@ sqlite = "2.5.0-alpha10"
 room = "2.6.1"
 
 jsoup = "1.18.1"
-#koalanlpKmr = "latest.release"
+kuromoji = "latest.release"
 
 [plugins]
 kotlin = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
@@ -82,4 +82,4 @@ roomCompiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 roomRuntime = { module = "androidx.room:room-runtime", version.ref = "room" }
 
 jsoup = { module = "org.jsoup:jsoup", version.ref = "jsoup" }
-#koalanlpKmr = { module = "kr.bydelta:koalanlp-kmr", version.ref = "koalanlpKmr" }
+kuromoji = { module = "com.atilika.kuromoji:kuromoji-ipadic", version.ref = "kuromoji" }

@@ -106,7 +106,7 @@ fun BottomNavHost(navController: NavHostController, mainActivity: MainActivity) 
 fun NavGraphBuilder.composable(screen: Screen, navController: NavController, mainActivity: MainActivity) {
     this.composable(screen.name) {
         if(screen == BottomScreen.Home) {
-            val isSuggestPlaylist = SettingManager.getSetting(mainActivity, SettingType.suggestPlaylist)
+            val isSuggestPlaylist = SettingManager[mainActivity, SettingType.suggestPlaylist]
             if(isSuggestPlaylist) {
                 PlaylistHome(navController)
                 return@composable

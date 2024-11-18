@@ -81,7 +81,7 @@ fun <T> SettingItem(type: SettingType<T>, value: MutableState<T>) {
                     checked = value.value as Boolean,
                     onCheckedChange = {
                         value.value = it as T
-                        SettingManager.setSetting(context, type, value.value)
+                        SettingManager[context, type] = value.value
                     },
                     colors = SwitchDefaults.colors(
                         checkedTrackColor = ThemeColor.Main,

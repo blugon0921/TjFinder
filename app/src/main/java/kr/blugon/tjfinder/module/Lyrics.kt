@@ -18,10 +18,11 @@ class Lyrics(
     @Composable
     fun Compose(fontSize: Float = 15f) {
         val context = LocalContext.current
-        val showFurigana = SettingManager.getSetting(context, SettingType.showFurigana)
+        val showFurigana = SettingManager[context, SettingType.showFurigana]
+        val showKoreanPronunciation = SettingManager[context, SettingType.showKoreanPronunciation]
 
         Column(modifier = Modifier.fillMaxSize()) {
-            textDataList.forEach { line ->
+            textDataList.first.forEachIndexed { index, line ->
                 Row(modifier = Modifier.fillMaxWidth()) {
                     if(line.first && showFurigana) {
                         line.second.forEach { data->
@@ -34,27 +35,38 @@ class Lyrics(
                             }
                         }
                     } else {
-                        if(line.second.isEmpty()) {
-                            PretendardText(" ", fontSize = fontSize)
-                            return@Row
-                        }
-                        line.second.forEach { data->
-                            PretendardText(data.text, fontSize = fontSize)
+                        if(!line.second.isEmpty()) {
+//                            PretendardText(" ", fontSize = fontSize)
+                            line.second.forEach { data->
+                                PretendardText(data.text, fontSize = fontSize)
+                            }
                         }
                     }
+                }
+                if(!showKoreanPronunciation) return@forEachIndexed
+                val pronunciation = textDataList.second.getOrNull(index)
+                if(pronunciation != null) {
+                    PretendardText(pronunciation, fontSize = fontSize-3, modifier = Modifier.offset(y= (-5).dp))
                 }
             }
         }
     }
 }
 
-//GPT 채고
-private fun String.extractTextData(): List<Pair<Boolean, List<TextData>>> {
+
+private fun String.extractTextData(): Pair<List<Pair<Boolean, List<TextData>>>, List<String?>> {
     val result = mutableListOf<Pair<Boolean, List<TextData>>>()
-    val regex = Regex("([\\u4E00-\\u9FFF]+)「([\\u3040-\\u309F]+)」")
+    val regex = Regex("([\\u4E00-\\u9FFF\\u3005]+)「([\\u3040-\\u309F]+)」")
+    val regex2 = Regex("＜(.*?)＞「(.*?)」")
+
+    val str = regex.replace(this) { match ->
+        val kanji = match.groupValues[1] // 한자
+        val hiragana = match.groupValues[2] // 히라가나
+        "＜$kanji＞「$hiragana」" // 치환 형식
+    }
 
     // 텍스트를 줄 단위로 분리하여 처리
-    for (line in split("\n")) {
+    for (line in str.split("\n")) {
         // 줄바꿈 처리
         if (line.replace("\t", "").isBlank()) {
             result.add(false to listOf())  // 줄바꿈 추가
@@ -64,7 +76,8 @@ private fun String.extractTextData(): List<Pair<Boolean, List<TextData>>> {
         val lineResult = mutableListOf<TextData>()
         var lastIndex = 0
 
-        regex.findAll(line).forEach { matchResult ->
+
+        regex2.findAll(line).forEach { matchResult ->
             // 매칭되지 않는 텍스트를 TextData로 추가
             if (lastIndex < matchResult.range.first) {
                 val unmatchedText = line.substring(lastIndex, matchResult.range.first).trim()
@@ -95,7 +108,30 @@ private fun String.extractTextData(): List<Pair<Boolean, List<TextData>>> {
         result.add(hasReading to lineResult)
     }
 
-    return result
+
+    val pronunciations = ArrayList<String?>()
+    var pronunciation = ""
+    val includeJapanese = ArrayList<Boolean>()
+    result.forEach { line ->
+        var isIncludeJapanese = false
+        var lineText = ""
+        line.second.forEach { data->
+            pronunciation += data.reading ?: data.text
+            lineText+= data.reading?:data.text
+            if(!isIncludeJapanese && (data.reading?:data.text).firstOrNull()?.isJapanese == true) {
+                isIncludeJapanese = true
+            }
+        }
+        pronunciation+="\n"
+        includeJapanese.add(isIncludeJapanese)
+    }
+    pronunciation.convertToKoreanPronunciation().split("\n").forEachIndexed { index, it ->
+        if(includeJapanese.getOrNull(index) == true) {
+            pronunciations.add(it)
+        } else pronunciations.add(null)
+    }
+
+    return result to pronunciations
 }
 
 data class TextData(

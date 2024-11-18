@@ -143,7 +143,7 @@ fun UserScreen(navController: NavController, mainActivity: MainActivity) {
                 Text(text = "로그아웃")
             }
             Text( //버전
-                text = "Beta 1.6.2",
+                text = "Beta 1.6.3",
                 color = Color.White,
                 fontFamily = Pretendard,
                 fontWeight = FontWeight.SemiBold,

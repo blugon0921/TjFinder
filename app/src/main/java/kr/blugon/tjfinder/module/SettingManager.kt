@@ -9,7 +9,7 @@ object SettingManager {
 
     private const val PREF_NAME = "setting"
 
-    fun <T> setSetting (context: Context, settingType: SettingType<T>, value: T) {
+    operator fun <T> set (context: Context, settingType: SettingType<T>, value: T) {
         val sharedPreferences = context.getSharedPreferences("${PREF_NAME}${settingType.category.name}", Context.MODE_PRIVATE)
         val editor = sharedPreferences.edit()
         when (settingType.valueType) {
@@ -22,7 +22,7 @@ object SettingManager {
         editor.apply()
     }
 
-    fun <T> getSetting(context: Context, settingType: SettingType<T>): T {
+    operator fun <T> get(context: Context, settingType: SettingType<T>): T {
         val sharedPreferences = context.getSharedPreferences("${PREF_NAME}${settingType.category.name}", Context.MODE_PRIVATE)
         return when (settingType.valueType) {
             SettingValueType.String -> sharedPreferences.getString(settingType.code, null) as T

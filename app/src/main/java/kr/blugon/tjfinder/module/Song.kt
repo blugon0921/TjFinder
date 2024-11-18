@@ -26,17 +26,18 @@ open class Song(
             .replace("\t", "")
             .replace("<br>", "\n")
             .replace("\n\n", "\n")
+            .replace("&amp;", "&")
+            .replace("&#035;", "#")
             .trimEnd('\n')
-            .replace("＜", "")
-            .replace("＞", ""))
+        )
         lyricsList[id] = lyrics
         return lyrics
     }
 
-    private fun String.removeTextBetweenBrackets(): String {
-        // 정규식을 사용하여 「과 」사이에 있는 글자를 찾아 제거합니다.
-        return this.replace(Regex("「.*?」"), "").replace("\t", "")
-    }
+//    private fun String.removeTextBetweenBrackets(): String {
+//        // 정규식을 사용하여 「과 」사이에 있는 글자를 찾아 제거합니다.
+//        return this.replace(Regex("「.*?」"), "").replace("\t", "")
+//    }
 }
 
 class Top100Song(

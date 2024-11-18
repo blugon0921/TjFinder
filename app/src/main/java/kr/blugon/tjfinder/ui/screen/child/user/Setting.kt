@@ -32,9 +32,11 @@ import kr.blugon.tjfinder.ui.theme.ThemeColor
 
 class SettingCategory(val name: String, val code: String) {
     companion object {
+        val Lyrics = SettingCategory("가사", "Lyrics")
         val TestFunction = SettingCategory("실험적 기능", "TestFunction")
         val Etc = SettingCategory("기타", "Etc")
         val entries = listOf(
+            Lyrics,
             TestFunction,
             Etc
         )
@@ -49,23 +51,31 @@ class SettingType <T> (
     val defaultValue: T
 ) {
     companion object {
-        val suggestPlaylist = SettingType(
-            SettingCategory.TestFunction,
-            "홈화면에 플레이리스트 추천목록 표시",
-            "suggestPlaylist",
-            SettingValueType.Boolean,
-            false
-        )
         val showFurigana = SettingType(
-            SettingCategory.Etc,
-            "일본어 곡 가사에 후리가나 표시",
+            SettingCategory.Lyrics,
+            "일본어 곡에 후리가나 표시",
             "showFurigana",
             SettingValueType.Boolean,
             true
         )
+        val showKoreanPronunciation = SettingType(
+            SettingCategory.Lyrics,
+            "일본어 곡에 한국어 발음 표시",
+            "showKoreanPronunciation",
+            SettingValueType.Boolean,
+            true
+        )
+        val suggestPlaylist = SettingType(
+            SettingCategory.TestFunction,
+            "홈화면에 공개 플레이리스트 목록 표시",
+            "suggestPlaylist",
+            SettingValueType.Boolean,
+            false
+        )
         val entries = listOf(
-            suggestPlaylist,
-            showFurigana
+            showFurigana,
+            showKoreanPronunciation,
+            suggestPlaylist
         )
     }
 }
@@ -84,11 +94,12 @@ fun SettingScreen(navController: NavController) {
     val context = LocalContext.current
 
     val settingValues = remember { mutableMapOf(
-        SettingType.suggestPlaylist to mutableStateOf(SettingManager.getSetting(context, SettingType.suggestPlaylist)),
-        SettingType.showFurigana to mutableStateOf(SettingManager.getSetting(context, SettingType.showFurigana)),
+        SettingType.showFurigana to mutableStateOf(SettingManager[context, SettingType.showFurigana]),
+        SettingType.showKoreanPronunciation to mutableStateOf(SettingManager[context, SettingType.showKoreanPronunciation]),
+        SettingType.suggestPlaylist to mutableStateOf(SettingManager[context, SettingType.suggestPlaylist]),
     ) }
 
-    val keyboardManager = LocalSoftwareKeyboardController.current
+//    val keyboardManager = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
     val interactionSource = remember { MutableInteractionSource() }
     Scaffold(
