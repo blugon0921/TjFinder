@@ -1,5 +1,6 @@
 package kr.blugon.tjfinder.ui.screen
 
+import android.app.Activity
 import android.content.Intent
 import android.widget.Toast
 import androidx.compose.foundation.clickable
@@ -38,8 +39,10 @@ import kr.blugon.tjfinder.ui.layout.card.user.UserProfileImage
 import kr.blugon.tjfinder.ui.layout.navigateScreen
 import kr.blugon.tjfinder.ui.theme.Pretendard
 
+private const val version = "Beta 1.6.4"
 @Composable
-fun UserScreen(navController: NavController, mainActivity: MainActivity) {
+//fun UserScreen(navController: NavController, mainActivity: MainActivity) {
+fun UserScreen(navController: NavController) {
     val context = LocalContext.current
     val isInternetAvailable = isInternetAvailable(context)
     val coroutineScope = rememberCoroutineScope()
@@ -135,15 +138,15 @@ fun UserScreen(navController: NavController, mainActivity: MainActivity) {
         ) {
             TextButton(onClick = {
                 LoginManager.logout(context)
-                val intent = Intent(mainActivity, MainActivity::class.java)
+                val intent = Intent((context as Activity), MainActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                mainActivity.startActivity(intent)
-                mainActivity.finish()
+                context.startActivity(intent)
+                context.finish()
             }) {
                 Text(text = "로그아웃")
             }
             Text( //버전
-                text = "Beta 1.6.3",
+                text = version,
                 color = Color.White,
                 fontFamily = Pretendard,
                 fontWeight = FontWeight.SemiBold,

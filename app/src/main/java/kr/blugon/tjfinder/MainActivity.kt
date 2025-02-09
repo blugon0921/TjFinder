@@ -1,5 +1,6 @@
 package kr.blugon.tjfinder
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -11,6 +12,8 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.google.firebase.FirebaseApp
@@ -46,6 +49,8 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+//@SuppressLint("StaticFieldLeak")
+//lateinit var navController: NavHostController
 @Composable
 fun Greeting(mainActivity: MainActivity) {
     val context = LocalContext.current
@@ -53,6 +58,7 @@ fun Greeting(mainActivity: MainActivity) {
     PopularCacheDB(context).close()
     NewCacheDB(context).close()
     val navController = rememberNavController()
+//    navController = rememberNavController()
 
     LaunchedEffect(Unit) {
         if(!isInternetAvailable(context)) return@LaunchedEffect

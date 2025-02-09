@@ -58,7 +58,8 @@ fun NewSongs(navController: NavController) {
         SortableTopBar( //TopBar
             title = "이달의 신곡",
             iconId = R.drawable.starlight,
-            isExpanded = sortExpanded
+            isExpanded = sortExpanded,
+            items = SongSortType.entries
         ) {
             sort = it
             sortExpanded.value = false
@@ -68,6 +69,7 @@ fun NewSongs(navController: NavController) {
                 SongSortType.SINGER -> songs.sortBy { it.singer }
             }
         }
+        ArrayList<SongSortType>(SongSortType.entries)
 
         var enableScroll by remember { mutableStateOf(false) }
         LazyColumnScrollbar(

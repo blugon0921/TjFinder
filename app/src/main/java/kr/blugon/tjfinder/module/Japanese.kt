@@ -16,6 +16,10 @@ fun String.convertToKoreanPronunciation(): String {
         val word = if(reading.firstOrNull()?.isJapanese == true) reading
         else surface
 
+        if(token.partOfSpeechLevel1 == "フィラー") {
+            results.add(word)
+            continue
+        }
         if (
             token.partOfSpeechLevel1 == "助詞" || // 조사
             token.partOfSpeechLevel1 == "接続詞"

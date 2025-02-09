@@ -312,10 +312,10 @@ fun Search(navController: NavController) {
             items = ArrayList<SortType>().apply {
                 when(category) {
                     SearchCategory.Song -> {
-                        SongSortType.entries.forEach { this.add(it) }
+                        addAll(SongSortType.entries)
                     }
                     SearchCategory.Playlist -> {
-                        PlaylistSortType.entries.forEach { this.add(it) }
+                        addAll(PlaylistSortType.entries)
                     }
                     SearchCategory.User -> {}
                 }

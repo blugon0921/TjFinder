@@ -86,7 +86,7 @@ fun Home(navController: NavController) {
             modifier = Modifier
                 .clickable {
                     searchFocus = true
-                    BottomScreen.Search.name
+                    navController.navigateScreen(BottomScreen.Search)
                 },
             title = "가수 또는 제목으로 검색",
             iconId = R.drawable.search
