@@ -19,9 +19,9 @@ import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import kr.blugon.tjfinder.R
-import kr.blugon.tjfinder.module.BlugonTJApi.memoList
-import kr.blugon.tjfinder.module.BlugonTJApi.removeMemo
-import kr.blugon.tjfinder.module.BlugonTJApi.setMemo
+import kr.blugon.tjfinder.utils.api.TjFinderApi.memoList
+import kr.blugon.tjfinder.utils.api.TjFinderApi.removeMemo
+import kr.blugon.tjfinder.utils.api.TjFinderApi.setMemo
 import kr.blugon.tjfinder.module.Song
 import kr.blugon.tjfinder.module.User
 import kr.blugon.tjfinder.module.memoList
@@ -34,22 +34,16 @@ fun MemoLayout(
     song: Song,
     user: User?,
     isVisible: MutableState<Boolean>,
-//    memo: MutableState<String>,
     highlight: String? = null,
 ) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
 
-//    val memo = remember { mutableStateOf("") }
-//    val showMemoPopup = remember { mutableStateOf(false) }
-//    LaunchedEffect(user) {
-//        memo.value = user?.getMemo(song)?: ""
-//    }
-
     Row(
         modifier = Modifier
             .padding(10.dp, 5.dp, 0.dp, 10.dp)
             .clickable {
+                if(user == null) return@clickable
                 isVisible.value = true
             },
         verticalAlignment = Alignment.CenterVertically
@@ -92,7 +86,7 @@ fun MemoLayout(
 //            TextConfirmCancelModal(defaultValue = memo.value, placeHolder = "메모", setShowModal = {isVisible.value = it}) {
             TextConfirmCancelModal(defaultValue = song.memo?: "", placeHolder = "메모", setShowModal = {isVisible.value = it}) {
                 coroutineScope.launch {
-                    if(user!!.memoList() == null) return@launch
+                    if(user?.memoList() == null) return@launch
                     memoList[song.id] = it //클라이언트 먼저 반영
                     if(it.isBlank()) user.removeMemo(song.id) //서버 업로드
                     else user.setMemo(song.id, it.trim()) //서버 업로드2

@@ -10,12 +10,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import kr.blugon.tjfinder.module.*
-import kr.blugon.tjfinder.module.BlugonTJApi.playlists
+import kr.blugon.tjfinder.utils.api.TjFinderApi.playlists
 import kr.blugon.tjfinder.module.State
 import kr.blugon.tjfinder.ui.layout.LoadingStateScreen
 import kr.blugon.tjfinder.ui.layout.PretendardText
@@ -23,9 +22,9 @@ import kr.blugon.tjfinder.ui.layout.card.playlist.PlaylistCard
 import kr.blugon.tjfinder.ui.layout.card.user.UserDescription
 import kr.blugon.tjfinder.ui.layout.card.user.UserName
 import kr.blugon.tjfinder.ui.layout.card.user.UserProfileImage
-import kr.blugon.tjfinder.ui.screen.*
 import kr.blugon.tjfinder.ui.screen.child.user.InOtherUser.otherUser
 import kr.blugon.tjfinder.ui.theme.ThemeColor
+import kr.blugon.tjfinder.utils.isInternetAvailable
 
 
 object InOtherUser {

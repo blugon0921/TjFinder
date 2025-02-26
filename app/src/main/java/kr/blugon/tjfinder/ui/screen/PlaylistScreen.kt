@@ -23,16 +23,20 @@ import androidx.navigation.NavController
 import kotlinx.coroutines.launch
 import kr.blugon.tjfinder.R
 import kr.blugon.tjfinder.module.*
-import kr.blugon.tjfinder.module.BlugonTJApi.libraryList
-import kr.blugon.tjfinder.module.BlugonTJApi.playlists
+import kr.blugon.tjfinder.utils.api.TjFinderApi.libraryList
+import kr.blugon.tjfinder.utils.api.TjFinderApi.playlists
 import kr.blugon.tjfinder.module.State
-import kr.blugon.tjfinder.ui.layout.ChildScreen
+import kr.blugon.tjfinder.ui.layout.navigation.ChildScreen
 import kr.blugon.tjfinder.ui.layout.LoadingStateScreen
 import kr.blugon.tjfinder.ui.layout.SortableTopBar
 import kr.blugon.tjfinder.ui.layout.card.playlist.PlaylistCard
-import kr.blugon.tjfinder.ui.layout.navigateScreen
+import kr.blugon.tjfinder.ui.layout.navigation.navigateScreen
+import kr.blugon.tjfinder.ui.layout.state.CenterText
 import kr.blugon.tjfinder.ui.theme.Pretendard
 import kr.blugon.tjfinder.ui.theme.ThemeColor
+import kr.blugon.tjfinder.utils.api.TjFinderApi
+import kr.blugon.tjfinder.utils.isApiServerOpened
+import kr.blugon.tjfinder.utils.isInternetAvailable
 import my.nanihadesuka.compose.LazyColumnScrollbar
 
 
@@ -83,12 +87,16 @@ fun PlaylistScreen(navController: NavController) {
             }
         }
     }
+
+    var isApiServerOpened by remember { mutableStateOf(true) }
     LaunchedEffect(Unit) {
         if(!isInternetAvailable(context)) {
             state = State.NOT_INTERNET_AVAILABLE
             return@LaunchedEffect
         }
-        user = BlugonTJApi.login(LoginManager.getSavedUid(context)!!)
+        isApiServerOpened = isApiServerOpened()
+        if(!isApiServerOpened) return@LaunchedEffect
+        user = TjFinderApi.login(LoginManager.getSavedUid(context)?: return@LaunchedEffect)?: return@LaunchedEffect
         reload()
     }
 
@@ -117,6 +125,26 @@ fun PlaylistScreen(navController: NavController) {
                 PlaylistSortType.CREATOR -> libraryList.sortBy { it.creator }
             }
         }
+
+        if(!isApiServerOpened) return CenterText(text = "서버 연결에 실패했습니다")
+        if(user == null) return CenterText(text = "로그인 후 이용 가능합니다")
+        println("asdf")
+        println("asdf")
+        println("asdf")
+        println("asdf")
+        println("asdf")
+        println("asdf")
+        println("asdf")
+        println("asdf")
+        println("asdf")
+        println("asdf")
+        println("asdf")
+        println("asdf")
+        println("asdf")
+        println("asdf")
+        println("asdf")
+        println("asdf")
+        println("asdf")
 
         val listState = rememberLazyListState()
         var enableScroll by remember { mutableStateOf(false) }

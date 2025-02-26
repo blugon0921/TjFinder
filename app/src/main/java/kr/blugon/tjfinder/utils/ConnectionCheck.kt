@@ -1,8 +1,11 @@
-package kr.blugon.tjfinder.module
+package kr.blugon.tjfinder.utils
 
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import fuel.httpGet
+import kr.blugon.tjfinder.utils.api.TjFinderApi
+import org.json.JSONObject
 
 fun isInternetAvailable(context: Context): Boolean {
     val result: Boolean
@@ -16,4 +19,11 @@ fun isInternetAvailable(context: Context): Boolean {
         else -> false
     }
     return result
+}
+
+suspend fun isApiServerOpened(): Boolean {
+    return try {
+        val response = TjFinderApi.URL.httpGet()
+        response.statusCode == 200
+    } catch (_: Exception) { false }
 }

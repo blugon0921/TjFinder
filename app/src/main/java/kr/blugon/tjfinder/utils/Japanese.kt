@@ -1,4 +1,4 @@
-package kr.blugon.tjfinder.module
+package kr.blugon.tjfinder.utils
 
 import com.atilika.kuromoji.ipadic.Tokenizer
 import com.park9eon.korean.separationKorean

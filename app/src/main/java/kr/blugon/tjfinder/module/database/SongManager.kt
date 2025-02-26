@@ -1,8 +1,9 @@
 package kr.blugon.tjfinder.module.database
 
 import android.content.Context
-import kotlinx.coroutines.*
 import kr.blugon.tjfinder.module.*
+import kr.blugon.tjfinder.utils.api.StringType
+import kr.blugon.tjfinder.utils.api.TJApi
 import java.time.LocalDateTime
 
 private val keys = mapOf(

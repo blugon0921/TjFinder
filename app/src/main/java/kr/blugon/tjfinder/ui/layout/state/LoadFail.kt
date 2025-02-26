@@ -14,40 +14,11 @@ import kr.blugon.tjfinder.ui.theme.Pretendard
 import kr.blugon.tjfinder.ui.theme.ThemeColor
 
 @Composable
-fun LoadFail(modifier: Modifier? = null) {
-    Column(
-        modifier = when(modifier) {
-            null -> Modifier.fillMaxSize()
-            else -> Modifier
-        },
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 5.dp),
-            text = "로딩 실패 :(",
-            fontFamily = Pretendard,
-            fontSize = TextUnit(30f, TextUnitType.Sp),
-            fontWeight = FontWeight.Normal,
-            color = ThemeColor.Main
-        )
-    }
-}
+fun LoadFail() = CenterText(
+    text = "로딩 실패 :("
+)
 
 @Composable
-fun LazyItemScope.LoadFail() {
-    Column(
-        modifier = Modifier.fillMaxSize().fillParentMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 5.dp),
-            text = "로딩 실패 :(",
-            fontFamily = Pretendard,
-            fontSize = TextUnit(30f, TextUnitType.Sp),
-            fontWeight = FontWeight.Normal,
-            color = ThemeColor.Main
-        )
-    }
-}
+fun LazyItemScope.LoadFail() = CenterText(
+    text = "로딩 실패 :("
+)

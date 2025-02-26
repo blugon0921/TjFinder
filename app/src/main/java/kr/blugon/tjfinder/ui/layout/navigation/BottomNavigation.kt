@@ -1,4 +1,4 @@
-package kr.blugon.tjfinder.ui.layout
+package kr.blugon.tjfinder.ui.layout.navigation
 
 import android.app.Activity
 import androidx.activity.compose.BackHandler
@@ -26,6 +26,7 @@ import kr.blugon.tjfinder.MainActivity
 import kr.blugon.tjfinder.R
 import kr.blugon.tjfinder.module.LoginManager
 import kr.blugon.tjfinder.module.SettingManager
+import kr.blugon.tjfinder.ui.layout.PretendardText
 import kr.blugon.tjfinder.ui.screen.*
 import kr.blugon.tjfinder.ui.screen.child.playlist.CreatePlaylist
 import kr.blugon.tjfinder.ui.screen.child.playlist.EditPlaylistScreen
@@ -82,7 +83,7 @@ fun BottomNavHost(navController: NavHostController, mainActivity: MainActivity) 
             composable(ChildScreen.SearchOtherUser, navController) { InOtherUserScreen(navController) }
         }
 
-        composable(BottomScreen.Home, navController) { 
+        composable(BottomScreen.Home, navController) {
             val isSuggestPlaylist = SettingManager[mainActivity, SettingType.suggestPlaylist]
             if(isSuggestPlaylist) PlaylistHome(navController)
             else Home(navController)
@@ -140,7 +141,7 @@ fun onBack(navController: NavController) {
 val NavController.currentScreen: Screen?
     get() {
         return Screen.valueOf(
-            if(LoginManager.getSavedUid(context) == null) DefaultScreen.Login.name
+            if (LoginManager.getSavedUid(context) == null) DefaultScreen.Login.name
             else this.currentBackStackEntry?.destination?.route ?: BottomScreen.Home.name
         )
     }
@@ -148,12 +149,15 @@ val NavController.currentScreen: Screen?
 fun BottomNav(navController: NavHostController, mainActivity: MainActivity) {
     val context = LocalContext.current
     val backStackEntry by navController.currentBackStackEntryAsState()
-    val currentScreen = Screen.valueOf(if(LoginManager.getSavedUid(context) == null) DefaultScreen.Login.name else backStackEntry?.destination?.route ?: BottomScreen.Home.name)
+    val currentScreen = Screen.valueOf(
+        if (LoginManager.getSavedUid(context) == null) DefaultScreen.Login.name else backStackEntry?.destination?.route
+            ?: BottomScreen.Home.name
+    )
 
 //    onBack(currentScreen, navController)
 //    navController.enableOnBackPressed(false)
 
-    if(Screen.valueOf(backStackEntry?.destination?.route?: "")?.isFullScreen == true) return BottomNavHost(navController = navController, mainActivity)
+    if(Screen.valueOf(backStackEntry?.destination?.route ?: "")?.isFullScreen == true) return BottomNavHost(navController = navController, mainActivity)
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),

@@ -22,9 +22,9 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import kr.blugon.tjfinder.R
 import kr.blugon.tjfinder.module.*
-import kr.blugon.tjfinder.module.BlugonTJApi.addSongToPlaylist
-import kr.blugon.tjfinder.module.BlugonTJApi.playlists
-import kr.blugon.tjfinder.module.BlugonTJApi.removeSongFromPlaylist
+import kr.blugon.tjfinder.utils.api.TjFinderApi.addSongToPlaylist
+import kr.blugon.tjfinder.utils.api.TjFinderApi.playlists
+import kr.blugon.tjfinder.utils.api.TjFinderApi.removeSongFromPlaylist
 import kr.blugon.tjfinder.ui.layout.DoubleText
 import kr.blugon.tjfinder.ui.layout.PretendardText
 import kr.blugon.tjfinder.ui.layout.PretendardSpanStyle
@@ -32,6 +32,7 @@ import kr.blugon.tjfinder.ui.layout.card.playlist.PlaylistThumbnail
 import kr.blugon.tjfinder.ui.layout.card.playlist.ScrollingPlaylistTitle
 import kr.blugon.tjfinder.ui.theme.Pretendard
 import kr.blugon.tjfinder.ui.theme.ThemeColor
+import kr.blugon.tjfinder.utils.api.TjFinderApi
 
 @Composable
 fun AddSongToPlaylistSheetItems(
@@ -105,10 +106,10 @@ fun AddSongToPlaylistSheetItems(
                             }
                             if(isAdd) {
                                 val response = user.addSongToPlaylist(playlist, song.id)
-                                if(response != BlugonTJApi.AddToPlaylistResponse.FAIL) successCount++
+                                if(response != TjFinderApi.AddToPlaylistResponse.FAIL) successCount++
                             } else {
                                 val response = user.removeSongFromPlaylist(playlist, song.id)
-                                if(response != BlugonTJApi.RemoveFromPlaylistResponse.FAIL) successCount++
+                                if(response != TjFinderApi.RemoveFromPlaylistResponse.FAIL) successCount++
                             }
                         }
                         if(allCount == 0) return@launch

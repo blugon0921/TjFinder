@@ -10,7 +10,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
 import kr.blugon.tjfinder.R
 import kr.blugon.tjfinder.module.*
 import kr.blugon.tjfinder.module.State
@@ -19,6 +18,7 @@ import kr.blugon.tjfinder.ui.layout.LoadingStateScreen
 import kr.blugon.tjfinder.ui.layout.SortableTopBar
 import kr.blugon.tjfinder.ui.layout.card.song.SongCard
 import kr.blugon.tjfinder.ui.theme.ThemeColor
+import kr.blugon.tjfinder.utils.isInternetAvailable
 import my.nanihadesuka.compose.LazyColumnScrollbar
 import kotlin.concurrent.thread
 

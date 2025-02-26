@@ -14,40 +14,15 @@ import kr.blugon.tjfinder.ui.theme.Pretendard
 import kr.blugon.tjfinder.ui.theme.ThemeColor
 
 @Composable
-fun NotConnectedNetwork(modifier: Modifier? = null) {
-    Column (
-        modifier = when(modifier) {
-            null -> Modifier.fillMaxSize()
-            else -> Modifier
-        },
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 5.dp),
-            text = "네트워크에 연결되지 않았어요:(",
-            fontFamily = Pretendard,
-            fontSize = TextUnit(20f, TextUnitType.Sp),
-            fontWeight = FontWeight.Medium,
-            color = ThemeColor.Main
-        )
-    }
-}
+fun NotConnectedNetwork() = CenterText(
+    text = "네트워크에 연결되지 않았어요:(",
+    fontSize = 20f,
+    fontWeight = FontWeight.Medium
+)
 
 @Composable
-fun LazyItemScope.NotConnectedNetwork() {
-    Column (
-        modifier = Modifier.fillMaxSize().fillParentMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 5.dp),
-            text = "네트워크에 연결되지 않았어요:(",
-            fontFamily = Pretendard,
-            fontSize = TextUnit(20f, TextUnitType.Sp),
-            fontWeight = FontWeight.Medium,
-            color = ThemeColor.Main
-        )
-    }
-}
+fun LazyItemScope.NotConnectedNetwork() = CenterText(
+    text = "네트워크에 연결되지 않았어요:(",
+    fontSize = 20f,
+    fontWeight = FontWeight.Medium
+)

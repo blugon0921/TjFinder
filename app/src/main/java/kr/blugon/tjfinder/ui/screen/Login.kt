@@ -24,19 +24,19 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kr.blugon.tjfinder.R
-import kr.blugon.tjfinder.module.BlugonTJApi
+import kr.blugon.tjfinder.utils.api.TjFinderApi
 import kr.blugon.tjfinder.module.LoginManager
 import kr.blugon.tjfinder.module.User
-import kr.blugon.tjfinder.ui.layout.BottomScreen
-import kr.blugon.tjfinder.ui.layout.navigateScreen
+import kr.blugon.tjfinder.ui.layout.navigation.BottomScreen
+import kr.blugon.tjfinder.ui.layout.navigation.navigateScreen
 import kr.blugon.tjfinder.ui.theme.Pretendard
 import kr.blugon.tjfinder.ui.theme.ThemeColor
+import kr.blugon.tjfinder.utils.api.TjFinderApi.loadMemoList
 
 @Composable
 fun LoginScreen(navController: NavController) {
@@ -50,7 +50,7 @@ fun LoginScreen(navController: NavController) {
     ) {
         if(isLogin) {
             coroutineScope.launch {
-                user = BlugonTJApi.login(LoginManager.getSavedUid(context)!!)
+                user = TjFinderApi.login(LoginManager.getSavedUid(context)!!)
             }
             return@rememberLauncherForActivityResult
         }
@@ -58,7 +58,7 @@ fun LoginScreen(navController: NavController) {
             isLogin = true
             Log.d("TjFinder", "Login to ${profileUser.name}")
             coroutineScope.launch(Dispatchers.IO) {
-                user = BlugonTJApi.registerUser(profileUser.uid, profileUser.email, profileUser.name, profileUser.photoUrl)
+                user = TjFinderApi.registerUser(profileUser.uid, profileUser.email, profileUser.name, profileUser.photoUrl)
             }
             if(LoginManager.getSavedUid(context) == null) LoginManager.saveLoginInfo(context, profileUser.uid)
         }) { task,exception -> //onException

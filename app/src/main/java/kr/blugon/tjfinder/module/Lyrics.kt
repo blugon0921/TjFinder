@@ -9,6 +9,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import kr.blugon.tjfinder.ui.layout.PretendardText
 import kr.blugon.tjfinder.ui.screen.child.user.SettingType
+import kr.blugon.tjfinder.utils.convertToKoreanPronunciation
+import kr.blugon.tjfinder.utils.isJapanese
 
 class Lyrics(
     val text: String,

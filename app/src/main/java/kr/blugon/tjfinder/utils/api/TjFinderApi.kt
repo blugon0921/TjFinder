@@ -1,20 +1,18 @@
-package kr.blugon.tjfinder.module
+package kr.blugon.tjfinder.utils.api
 
 import android.content.Context
-import android.net.Uri
 import fuel.httpGet
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kr.blugon.tjfinder.module.*
 import org.json.JSONObject
 import java.net.URLEncoder
 
-object BlugonTJApi {
-    val rootTjFinderURL = "https://tjfinderapi.blugon.kr"
-
-//    val apiVersion = "v1"
+object TjFinderApi {
+    const val URL = "https://tjfinderapi.blugon.kr"
 
     suspend fun registerUser(uid: String, email: String, name: String, profileImage: String): User? {
-        val url = "${rootTjFinderURL}/user/register?uid=${
+        val url = "$URL/user/register?uid=${
             withContext(Dispatchers.IO) {
                 URLEncoder.encode(uid, "utf-8")
             }
@@ -46,7 +44,7 @@ object BlugonTJApi {
         )
     }
     suspend fun login(uid: String): User? {
-        val url = "${rootTjFinderURL}/user/login?uid=${
+        val url = "$URL/user/login?uid=${
             withContext(Dispatchers.IO) {
                 URLEncoder.encode(uid, "utf-8")
             }
@@ -66,7 +64,7 @@ object BlugonTJApi {
         )
     }
     suspend fun getUser(name: String, tag: String): OtherUser? {
-        val url = "${rootTjFinderURL}/user/get?name=${
+        val url = "$URL/user/get?name=${
             withContext(Dispatchers.IO) {
                 URLEncoder.encode(name, "utf-8")
             }
@@ -83,7 +81,7 @@ object BlugonTJApi {
         )
     }
     suspend fun searchUser(name: String, context: Context): List<OtherUser> {
-        val url = "${rootTjFinderURL}/user/search?name=${
+        val url = "$URL/user/search?name=${
             withContext(Dispatchers.IO) {
                 URLEncoder.encode(name, "utf-8")
             }
@@ -95,17 +93,19 @@ object BlugonTJApi {
         val users = ArrayList<OtherUser>()
         repeat(data.length()) {
             val user = data.getJSONObject(it)
-            users.add(OtherUser(
+            users.add(
+                OtherUser(
                 user.getString("name"),
                 user.getString("tag"),
                 user.getString("profileImage"),
                 user.getString("description"),
-            ))
+            )
+            )
         }
         return users
     }
     suspend fun User.editName(newName: String): Boolean {
-        val url = "${rootTjFinderURL}/user/edit/name?uid=${
+        val url = "$URL/user/edit/name?uid=${
             withContext(Dispatchers.IO) {
                 URLEncoder.encode(uid, "utf-8")
             }
@@ -119,7 +119,7 @@ object BlugonTJApi {
         return json.getInt("code") == 200
     }
     suspend fun User.editProfileImage(newImageUrl: String): Boolean {
-        val url = "${rootTjFinderURL}/user/edit/profileImage?uid=${
+        val url = "$URL/user/edit/profileImage?uid=${
             withContext(Dispatchers.IO) {
                 URLEncoder.encode(uid, "utf-8")
             }
@@ -133,7 +133,7 @@ object BlugonTJApi {
         return json.getInt("code") == 200
     }
     suspend fun User.editDescription(description: String): Boolean {
-        val url = "${rootTjFinderURL}/user/edit/description?uid=${
+        val url = "$URL/user/edit/description?uid=${
             withContext(Dispatchers.IO) {
                 URLEncoder.encode(uid, "utf-8")
             }
@@ -147,7 +147,7 @@ object BlugonTJApi {
         return json.getInt("code") == 200
     }
     suspend fun User.editIsPrivate(isPrivate: Boolean): Boolean {
-        val url = "${rootTjFinderURL}/user/edit/isPrivate?uid=${
+        val url = "$URL/user/edit/isPrivate?uid=${
             withContext(Dispatchers.IO) {
                 URLEncoder.encode(uid, "utf-8")
             }
@@ -160,7 +160,7 @@ object BlugonTJApi {
 
 
     suspend fun User.createPlaylist(title: String): MyPlaylist? {
-        val url = "${rootTjFinderURL}/playlist/create?uid=${
+        val url = "$URL/playlist/create?uid=${
             withContext(Dispatchers.IO) {
                 URLEncoder.encode(uid, "utf-8")
             }
@@ -188,7 +188,7 @@ object BlugonTJApi {
     }
     suspend fun User.deletePlaylist(playlist: MyPlaylist): Boolean = this.deletePlaylist(playlist.id)
     suspend fun User.deletePlaylist(playlistId: String): Boolean {
-        val url = "${rootTjFinderURL}/playlist/delete?uid=${
+        val url = "$URL/playlist/delete?uid=${
             withContext(Dispatchers.IO) {
                 URLEncoder.encode(uid, "utf-8")
             }
@@ -199,7 +199,7 @@ object BlugonTJApi {
     }
     suspend fun User.editTitleOfPlaylist(playlist: MyPlaylist, newTitle: String): Boolean = this.editTitleOfPlaylist(playlist.id, newTitle)
     suspend fun User.editTitleOfPlaylist(playlistId: String, newTitle: String): Boolean {
-        val url = "${rootTjFinderURL}/playlist/edit/title?uid=${
+        val url = "$URL/playlist/edit/title?uid=${
             withContext(Dispatchers.IO) {
                 URLEncoder.encode(uid, "utf-8")
             }
@@ -214,7 +214,7 @@ object BlugonTJApi {
     }
     suspend fun User.editIsPrivateOfPlaylist(playlist: MyPlaylist, isPrivate: Boolean): Boolean = this.editIsPrivateOfPlaylist(playlist.id, isPrivate)
     suspend fun User.editIsPrivateOfPlaylist(playlistId: String, isPrivate: Boolean): Boolean {
-        val url = "${rootTjFinderURL}/playlist/edit/private?uid=${
+        val url = "$URL/playlist/edit/private?uid=${
             withContext(Dispatchers.IO) {
                 URLEncoder.encode(uid, "utf-8")
             }
@@ -225,7 +225,7 @@ object BlugonTJApi {
     }
     suspend fun User.editThumbnailOfPlaylist(playlist: MyPlaylist, newThumbnail: String): Boolean = this.editThumbnailOfPlaylist(playlist.id, newThumbnail)
     suspend fun User.editThumbnailOfPlaylist(playlistId: String, newThumbnail: String): Boolean {
-        val url = "${rootTjFinderURL}/playlist/edit/thumbnail?uid=${
+        val url = "$URL/playlist/edit/thumbnail?uid=${
             withContext(Dispatchers.IO) {
                 URLEncoder.encode(uid, "utf-8")
             }
@@ -248,7 +248,7 @@ object BlugonTJApi {
     suspend fun User.addSongToPlaylist(playlistId: String, song: Song): AddToPlaylistResponse = this.addSongToPlaylist(playlistId, song.id)
     suspend fun User.addSongToPlaylist(playlistId: String, songId: Int): AddToPlaylistResponse {
         try {
-            val url = "${rootTjFinderURL}/playlist/add?uid=${
+            val url = "$URL/playlist/add?uid=${
                 withContext(Dispatchers.IO) {
                     URLEncoder.encode(uid, "utf-8")
                 }
@@ -263,7 +263,8 @@ object BlugonTJApi {
                 }
                 else -> AddToPlaylistResponse.FAIL
             }
-        } catch (e: Exception) {return AddToPlaylistResponse.FAIL}
+        } catch (e: Exception) {return AddToPlaylistResponse.FAIL
+        }
     }
     enum class RemoveFromPlaylistResponse {
         SUCCESS,
@@ -274,7 +275,7 @@ object BlugonTJApi {
     suspend fun User.removeSongFromPlaylist(playlistId: String, song: Song): RemoveFromPlaylistResponse = this.removeSongFromPlaylist(playlistId, song.id)
     suspend fun User.removeSongFromPlaylist(playlistId: String, songId: Int): RemoveFromPlaylistResponse {
         try {
-            val url = "${rootTjFinderURL}/playlist/remove?uid=${
+            val url = "$URL/playlist/remove?uid=${
                 withContext(Dispatchers.IO) {
                     URLEncoder.encode(uid, "utf-8")
                 }
@@ -283,7 +284,8 @@ object BlugonTJApi {
             val json = JSONObject(body)
             return if(json.getInt("code") == 200) RemoveFromPlaylistResponse.SUCCESS
                 else RemoveFromPlaylistResponse.FAIL
-        } catch (e: Exception) {return RemoveFromPlaylistResponse.FAIL}
+        } catch (e: Exception) {return RemoveFromPlaylistResponse.FAIL
+        }
     }
     suspend fun Playlist.exist(song: Song, context: Context) = this.exist(song.id, context)
     suspend fun Playlist.exist(songId: Int, context: Context): Boolean {
@@ -292,7 +294,7 @@ object BlugonTJApi {
     }
     suspend fun User.getPlaylist(playlistId: String, context: Context, detailSongData: Boolean = false): Playlist? = getPlaylist(playlistId, context, detailSongData, uid)
     suspend fun getPlaylist(playlistId: String, context: Context, detailSongData: Boolean = false, uid: String? = null): Playlist? {
-        val url = "${rootTjFinderURL}/playlist/get?${
+        val url = "$URL/playlist/get?${
             if(uid != null) {
                 "uid=${
                     withContext(Dispatchers.IO) {
@@ -316,7 +318,7 @@ object BlugonTJApi {
         }
     }
     suspend fun OtherUser.playlists(context: Context, detailSongData: Boolean = false, uid: String? = null): List<Playlist>? {
-        val url = "${rootTjFinderURL}/playlist/list?name=${
+        val url = "$URL/playlist/list?name=${
             withContext(Dispatchers.IO) {
                 URLEncoder.encode(this@playlists.name, "utf-8")
             }
@@ -336,7 +338,7 @@ object BlugonTJApi {
         return playlists
     }
     suspend fun User.searchPlaylist(title: String, context: Context): List<Playlist> {
-        val url = "${rootTjFinderURL}/playlist/search?title=${
+        val url = "$URL/playlist/search?title=${
             withContext(Dispatchers.IO) {
                 URLEncoder.encode(title, "utf-8")
             }
@@ -355,7 +357,7 @@ object BlugonTJApi {
 
 
     suspend fun User.setMemo(songId: Int, memo: String): Boolean {
-        val url = "${rootTjFinderURL}/memo/set?uid=${
+        val url = "$URL/memo/set?uid=${
             withContext(Dispatchers.IO) {
                 URLEncoder.encode(uid, "utf-8")
             }
@@ -374,7 +376,7 @@ object BlugonTJApi {
 //            }
     }
     suspend fun User.removeMemo(songId: Int): Boolean {
-        val url = "${rootTjFinderURL}/memo/remove?uid=${
+        val url = "$URL/memo/remove?uid=${
             withContext(Dispatchers.IO) {
                 URLEncoder.encode(uid, "utf-8")
             }
@@ -386,7 +388,7 @@ object BlugonTJApi {
     suspend fun User.getMemo(song: Song): String? = this.getMemo(song.id)
     suspend fun User.getMemo(songId: Int): String? {
         if(memoList.contains(songId)) return memoList[songId]
-        val url = "${rootTjFinderURL}/memo/get?uid=${
+        val url = "$URL/memo/get?uid=${
             withContext(Dispatchers.IO) {
                 URLEncoder.encode(uid, "utf-8")
             }
@@ -398,7 +400,7 @@ object BlugonTJApi {
     }
     suspend fun User.loadMemoList(): Boolean {
         if(isLoadedMemoList) return false
-        val url = "${rootTjFinderURL}/memo/list?uid=${
+        val url = "$URL/memo/list?uid=${
             withContext(Dispatchers.IO) {
                 URLEncoder.encode(uid, "utf-8")
             }
@@ -424,7 +426,7 @@ object BlugonTJApi {
                 }
             }
         }
-        val url = "${rootTjFinderURL}/memo/list?uid=${
+        val url = "$URL/memo/list?uid=${
             withContext(Dispatchers.IO) {
                 URLEncoder.encode(uid, "utf-8")
             }
@@ -444,7 +446,7 @@ object BlugonTJApi {
     }
 
     suspend fun User.addPlaylistToLibrary(playlistId: String): Boolean {
-        val url = "${rootTjFinderURL}/library/add?uid=${
+        val url = "$URL/library/add?uid=${
             withContext(Dispatchers.IO) {
                 URLEncoder.encode(uid, "utf-8")
             }
@@ -454,7 +456,7 @@ object BlugonTJApi {
         return (json.getInt("code") == 200)
     }
     suspend fun User.removePlaylistFromLibrary(playlistId: String): Boolean {
-        val url = "${rootTjFinderURL}/library/remove?uid=${
+        val url = "$URL/library/remove?uid=${
             withContext(Dispatchers.IO) {
                 URLEncoder.encode(uid, "utf-8")
             }
@@ -464,7 +466,7 @@ object BlugonTJApi {
         return (json.getInt("code") == 200)
     }
     suspend fun User.isExistInLibrary(playlistId: String): Boolean {
-        val url = "${rootTjFinderURL}/library/isExist?uid=${
+        val url = "$URL/library/isExist?uid=${
             withContext(Dispatchers.IO) {
                 URLEncoder.encode(uid, "utf-8")
             }
@@ -475,7 +477,7 @@ object BlugonTJApi {
         return json.getBoolean("isExist")
     }
     suspend fun User.libraryList(context: Context): List<Playlist>? {
-        val url = "${rootTjFinderURL}/library/list?uid=${
+        val url = "$URL/library/list?uid=${
             withContext(Dispatchers.IO) {
                 URLEncoder.encode(uid, "utf-8")
             }
@@ -487,7 +489,7 @@ object BlugonTJApi {
         val list = ArrayList<Playlist>()
         repeat(data.length()) {
             val playlistId = data.getString(it)
-            val playlist = getPlaylist(playlistId, context, uid = this.uid)?: return@repeat
+            val playlist = getPlaylist(playlistId, context, uid = this.uid) ?: return@repeat
             list.add(playlist)
         }
         return list

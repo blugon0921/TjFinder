@@ -14,10 +14,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
 import kr.blugon.tjfinder.module.*
 import kr.blugon.tjfinder.ui.layout.*
+import kr.blugon.tjfinder.ui.layout.navigation.BottomSheet
 import kr.blugon.tjfinder.ui.theme.ThemeColor
+import kr.blugon.tjfinder.utils.isApiServerOpened
 
 
 val highLightColor = Color(0xFFE9AC52)
@@ -35,7 +36,10 @@ fun SongCard(
 
     var user by remember { mutableStateOf<User?>(null) }
     val showMemoPopup = remember { mutableStateOf(false) }
+    var isApiServerOpened by remember { mutableStateOf(true) }
     LaunchedEffect(Unit) {
+        isApiServerOpened = isApiServerOpened()
+        if(!isApiServerOpened) return@LaunchedEffect
         user = User.login(context)?: return@LaunchedEffect
     }
 
@@ -80,7 +84,6 @@ fun SongCard(
         }
     }
 
-
     val sheetState = rememberModalBottomSheetState()
     val showLyrics = remember { mutableStateOf(false) }
     if(showBottomSheet.value) {
@@ -113,7 +116,7 @@ fun SongCard(
                 }
             },
         ) {
-            SongBottomItems(song = song, user = user!!, showBottomSheet = showBottomSheet, showLyrics, navController = navController)
+            SongBottomItems(song = song, user = user, showBottomSheet = showBottomSheet, showLyrics, navController = navController)
         }
     }
     if(showLyrics.value) {

@@ -1,6 +1,5 @@
 package kr.blugon.tjfinder.module
 
-import kr.blugon.tjfinder.module.BlugonTJApi.getMemo
 import kr.blugon.tjfinder.ui.layout.lyricsList
 import org.jsoup.Jsoup
 import java.io.Serializable

@@ -16,8 +16,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import kr.blugon.tjfinder.module.Song
 import kr.blugon.tjfinder.module.search.SearchInfo
-import kr.blugon.tjfinder.ui.layout.BottomScreen
-import kr.blugon.tjfinder.ui.layout.navigateScreen
+import kr.blugon.tjfinder.ui.layout.navigation.BottomScreen
+import kr.blugon.tjfinder.ui.layout.navigation.navigateScreen
 import kr.blugon.tjfinder.ui.screen.initValue
 import kr.blugon.tjfinder.ui.theme.Pretendard
 

@@ -85,8 +85,8 @@ fun <T> SettingItem(type: SettingType<T>, value: MutableState<T>) {
                     },
                     colors = SwitchDefaults.colors(
                         checkedTrackColor = ThemeColor.Main,
-                        uncheckedTrackColor = ThemeColor.MainGray,
-                        uncheckedBorderColor = ThemeColor.MainGray,
+                        uncheckedTrackColor = ThemeColor.DarkMain,
+                        uncheckedBorderColor = ThemeColor.DarkMain,
                         uncheckedThumbColor = ThemeColor.Main,
                         checkedThumbColor = Color.White
                     )

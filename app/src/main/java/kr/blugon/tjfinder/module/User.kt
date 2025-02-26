@@ -1,7 +1,7 @@
 package kr.blugon.tjfinder.module
 
 import android.content.Context
-import android.net.Uri
+import kr.blugon.tjfinder.utils.api.TjFinderApi
 
 open class NoTagUser(
     open val uid: String,
@@ -29,7 +29,7 @@ data class User(
 ): NoTagUser(uid, email, name, photoUrl) {
     companion object {
         suspend fun login(context: Context): User? {
-            return if(LoginManager.getSavedUid(context) != null) BlugonTJApi.login(LoginManager.getSavedUid(context)!!)
+            return if(LoginManager.getSavedUid(context) != null) TjFinderApi.login(LoginManager.getSavedUid(context)!!)
             else null
         }
     }

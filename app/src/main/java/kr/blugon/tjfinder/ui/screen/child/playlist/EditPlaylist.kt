@@ -26,24 +26,24 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import kotlinx.coroutines.launch
-import kr.blugon.tjfinder.MainActivity
 import kr.blugon.tjfinder.module.*
-import kr.blugon.tjfinder.module.BlugonTJApi.editThumbnailOfPlaylist
-import kr.blugon.tjfinder.module.BlugonTJApi.editTitleOfPlaylist
-import kr.blugon.tjfinder.module.BlugonTJApi.playlists
+import kr.blugon.tjfinder.utils.api.TjFinderApi.editThumbnailOfPlaylist
+import kr.blugon.tjfinder.utils.api.TjFinderApi.editTitleOfPlaylist
+import kr.blugon.tjfinder.utils.api.TjFinderApi.playlists
 import kr.blugon.tjfinder.module.State
-import kr.blugon.tjfinder.module.api.FinderApi
-import kr.blugon.tjfinder.module.api.FinderResponse
+import kr.blugon.tjfinder.utils.api.FinderApi
+import kr.blugon.tjfinder.utils.api.FinderResponse
 import kr.blugon.tjfinder.ui.layout.PretendardText
 import kr.blugon.tjfinder.ui.layout.state.Loading
 import kr.blugon.tjfinder.ui.layout.state.NotConnectedNetwork
 import kr.blugon.tjfinder.ui.screen.child.EditTextField
 import kr.blugon.tjfinder.ui.screen.child.playlist.EditPlaylist.playlist
 import kr.blugon.tjfinder.ui.theme.ThemeColor
+import kr.blugon.tjfinder.utils.api.TjFinderApi
+import kr.blugon.tjfinder.utils.isInternetAvailable
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -88,7 +88,7 @@ fun EditPlaylistScreen(navController: NavController) {
 
     val retrofit = Retrofit
         .Builder()
-        .baseUrl("${BlugonTJApi.rootTjFinderURL}/")
+        .baseUrl("${TjFinderApi.URL}/")
         .addConverterFactory(GsonConverterFactory.create())
         .build()
         .create(FinderApi::class.java)

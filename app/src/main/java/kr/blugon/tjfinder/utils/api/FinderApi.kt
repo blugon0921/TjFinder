@@ -1,4 +1,4 @@
-package kr.blugon.tjfinder.module.api
+package kr.blugon.tjfinder.utils.api
 
 import com.google.gson.annotations.SerializedName
 import okhttp3.MultipartBody

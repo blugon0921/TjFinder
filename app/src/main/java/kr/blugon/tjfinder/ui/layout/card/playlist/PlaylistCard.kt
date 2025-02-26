@@ -15,10 +15,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import kr.blugon.tjfinder.module.BlugonTJApi.getPlaylist
+import kr.blugon.tjfinder.utils.api.TjFinderApi.getPlaylist
 import kr.blugon.tjfinder.module.Playlist
 import kr.blugon.tjfinder.module.User
 import kr.blugon.tjfinder.ui.layout.*
+import kr.blugon.tjfinder.ui.layout.navigation.BottomSheet
+import kr.blugon.tjfinder.ui.layout.navigation.ChildScreen
+import kr.blugon.tjfinder.ui.layout.navigation.navigateScreen
 import kr.blugon.tjfinder.ui.screen.child.playlist.InPlaylist
 import kr.blugon.tjfinder.ui.theme.ThemeColor
 

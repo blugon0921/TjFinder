@@ -26,6 +26,6 @@ object ThemeColor {
 
     var HyperLink = Color(0xff70a2c1)
 
-    var MainGray = Color(0xFF91754D)
+    var DarkMain = Color(0xFF91754D)
     var Main = Color(0xFFE9AC52)
 }

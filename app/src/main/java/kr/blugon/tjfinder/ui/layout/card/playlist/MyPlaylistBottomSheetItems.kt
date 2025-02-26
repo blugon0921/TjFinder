@@ -26,14 +26,14 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import kotlinx.coroutines.launch
 import kr.blugon.tjfinder.R
-import kr.blugon.tjfinder.module.BlugonTJApi.deletePlaylist
-import kr.blugon.tjfinder.module.BlugonTJApi.editIsPrivateOfPlaylist
+import kr.blugon.tjfinder.utils.api.TjFinderApi.deletePlaylist
+import kr.blugon.tjfinder.utils.api.TjFinderApi.editIsPrivateOfPlaylist
 import kr.blugon.tjfinder.module.MyPlaylist
 import kr.blugon.tjfinder.module.User
-import kr.blugon.tjfinder.ui.layout.BottomSheetItem
-import kr.blugon.tjfinder.ui.layout.ChildScreen
+import kr.blugon.tjfinder.ui.layout.navigation.BottomSheetItem
+import kr.blugon.tjfinder.ui.layout.navigation.ChildScreen
 import kr.blugon.tjfinder.ui.layout.ConfirmCancelModal
-import kr.blugon.tjfinder.ui.layout.navigateScreen
+import kr.blugon.tjfinder.ui.layout.navigation.navigateScreen
 import kr.blugon.tjfinder.ui.screen.child.playlist.EditPlaylist
 import kr.blugon.tjfinder.ui.theme.Pretendard
 import kr.blugon.tjfinder.ui.theme.ThemeColor
@@ -177,8 +177,8 @@ fun MyPlaylistBottomSheetItems(
                     onCheckedChange = { switchPrivate() },
                     colors = SwitchDefaults.colors(
                         checkedTrackColor = ThemeColor.Main,
-                        uncheckedTrackColor = ThemeColor.MainGray,
-                        uncheckedBorderColor = ThemeColor.MainGray,
+                        uncheckedTrackColor = ThemeColor.DarkMain,
+                        uncheckedBorderColor = ThemeColor.DarkMain,
                         uncheckedThumbColor = ThemeColor.Main,
                         checkedThumbColor = Color.White
                     )

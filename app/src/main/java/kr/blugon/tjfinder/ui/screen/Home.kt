@@ -1,12 +1,10 @@
 package kr.blugon.tjfinder.ui.screen
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -19,7 +17,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
@@ -29,7 +26,11 @@ import kr.blugon.tjfinder.module.State
 import kr.blugon.tjfinder.module.database.SongManager
 import kr.blugon.tjfinder.ui.layout.*
 import kr.blugon.tjfinder.ui.layout.card.song.Top100SongCard
+import kr.blugon.tjfinder.ui.layout.navigation.BottomScreen
+import kr.blugon.tjfinder.ui.layout.navigation.navigateScreen
 import kr.blugon.tjfinder.ui.theme.ThemeColor
+import kr.blugon.tjfinder.utils.api.TjFinderApi.loadMemoList
+import kr.blugon.tjfinder.utils.isInternetAvailable
 import my.nanihadesuka.compose.LazyColumnScrollbar
 import kotlin.concurrent.thread
 
@@ -47,28 +48,22 @@ fun Home(navController: NavController) {
 
     if(!(::listState.isInitialized)) listState = rememberLazyListState()
 
-
-    var user by remember { mutableStateOf<User?>(null) }
     var state by remember { mutableStateOf(State.SUCCESS) }
     LaunchedEffect(Unit) {
-        if(!isInternetAvailable(context)) {
+        if (!isInternetAvailable(context)) {
             state = State.NOT_INTERNET_AVAILABLE
             return@LaunchedEffect
         }
-        user = User.login(context)
-        if(user == null) {
-            navController.navigateScreen(DefaultScreen.Login)
-            return@LaunchedEffect
-        }
+        User.login(context)?.loadMemoList()
         if (top100.isEmpty()) {
-            if(songs[songType] != null) {
+            if (songs[songType] != null) {
                 top100.addAll(songs[songType]!!)
                 return@LaunchedEffect
             }
             state = State.LOADING
             thread {
                 val data = SongManager.monthPopular(songType, context)
-                if(data.isEmpty()) {
+                if (data.isEmpty()) {
                     state = State.FAIL
                     return@thread
                 }

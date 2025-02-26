@@ -27,17 +27,19 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import kotlinx.coroutines.launch
 import kr.blugon.tjfinder.module.*
-import kr.blugon.tjfinder.module.BlugonTJApi.createPlaylist
-import kr.blugon.tjfinder.module.BlugonTJApi.editThumbnailOfPlaylist
-import kr.blugon.tjfinder.module.BlugonTJApi.playlists
+import kr.blugon.tjfinder.utils.api.TjFinderApi.createPlaylist
+import kr.blugon.tjfinder.utils.api.TjFinderApi.editThumbnailOfPlaylist
+import kr.blugon.tjfinder.utils.api.TjFinderApi.playlists
 import kr.blugon.tjfinder.module.State
-import kr.blugon.tjfinder.module.api.FinderApi
-import kr.blugon.tjfinder.module.api.FinderResponse
+import kr.blugon.tjfinder.utils.api.FinderApi
+import kr.blugon.tjfinder.utils.api.FinderResponse
 import kr.blugon.tjfinder.ui.layout.PretendardText
 import kr.blugon.tjfinder.ui.layout.state.Loading
 import kr.blugon.tjfinder.ui.layout.state.NotConnectedNetwork
 import kr.blugon.tjfinder.ui.screen.child.EditTextField
 import kr.blugon.tjfinder.ui.theme.ThemeColor
+import kr.blugon.tjfinder.utils.api.TjFinderApi
+import kr.blugon.tjfinder.utils.isInternetAvailable
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -82,7 +84,7 @@ fun CreatePlaylist(navController: NavController) {
 
     val retrofit = Retrofit
         .Builder()
-        .baseUrl("${BlugonTJApi.rootTjFinderURL}/")
+        .baseUrl("${TjFinderApi.URL}/")
         .addConverterFactory(GsonConverterFactory.create())
         .build()
         .create(FinderApi::class.java)

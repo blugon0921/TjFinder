@@ -33,7 +33,6 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kr.blugon.tjfinder.R
@@ -46,6 +45,8 @@ import kr.blugon.tjfinder.ui.layout.card.song.PlaylistSongCard
 import kr.blugon.tjfinder.ui.screen.child.playlist.InPlaylist.playlist
 import kr.blugon.tjfinder.ui.theme.Pretendard
 import kr.blugon.tjfinder.ui.theme.ThemeColor
+import kr.blugon.tjfinder.utils.api.TjFinderApi
+import kr.blugon.tjfinder.utils.isInternetAvailable
 import my.nanihadesuka.compose.LazyColumnScrollbar
 
 object InPlaylist {
@@ -70,7 +71,7 @@ fun InPlaylistScreen(navController: NavController) {
             return@LaunchedEffect
         }
         if(LoginManager.getSavedUid(context) != null) {
-            user = BlugonTJApi.login(LoginManager.getSavedUid(context)!!)
+            user = TjFinderApi.login(LoginManager.getSavedUid(context)!!)
             state = State.LOADING
             playlist.loadSongList(context)
             coroutineScope.launch {

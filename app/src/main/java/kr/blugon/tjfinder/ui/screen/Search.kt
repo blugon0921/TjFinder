@@ -2,7 +2,6 @@
 
 package kr.blugon.tjfinder.ui.screen
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
@@ -42,29 +41,29 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
 import kr.blugon.tjfinder.R
 import kr.blugon.tjfinder.module.*
-import kr.blugon.tjfinder.module.BlugonTJApi.getPlaylist
-import kr.blugon.tjfinder.module.BlugonTJApi.memoList
-import kr.blugon.tjfinder.module.BlugonTJApi.searchPlaylist
+import kr.blugon.tjfinder.utils.api.TjFinderApi.getPlaylist
+import kr.blugon.tjfinder.utils.api.TjFinderApi.memoList
+import kr.blugon.tjfinder.utils.api.TjFinderApi.searchPlaylist
 import kr.blugon.tjfinder.module.database.SongCacheDB
 import kr.blugon.tjfinder.module.database.SongManager
 import kr.blugon.tjfinder.module.search.SearchCategory
 import kr.blugon.tjfinder.module.search.SearchInfo
-import kr.blugon.tjfinder.ui.layout.BottomScreen
 import kr.blugon.tjfinder.ui.layout.PretendardText
 import kr.blugon.tjfinder.ui.layout.PretendardTextStyle
 import kr.blugon.tjfinder.ui.layout.SortableTopBar
 import kr.blugon.tjfinder.ui.layout.card.playlist.PlaylistCard
 import kr.blugon.tjfinder.ui.layout.card.song.SearchSongCard
 import kr.blugon.tjfinder.ui.layout.card.user.OtherUserCard
+import kr.blugon.tjfinder.ui.layout.state.CenterText
 import kr.blugon.tjfinder.ui.theme.Pretendard
 import kr.blugon.tjfinder.ui.theme.ThemeColor
+import kr.blugon.tjfinder.utils.api.TjFinderApi
+import kr.blugon.tjfinder.utils.isApiServerOpened
+import kr.blugon.tjfinder.utils.isInternetAvailable
 import my.nanihadesuka.compose.LazyColumnScrollbar
 import okio.IOException
 
@@ -127,6 +126,7 @@ fun Search(navController: NavController) {
     }
 
     var user by remember { mutableStateOf<User?>(null) }
+    var isApiServerOpened by remember { mutableStateOf(true) }
 
     suspend fun searchSong(title: Boolean = true, singer: Boolean = true, match: Boolean = false) {
         states[SearchCategory.Song] = SearchState.SEARCHING
@@ -139,6 +139,7 @@ fun Search(navController: NavController) {
         states[SearchCategory.Song] = SearchState.SUCCESS
     }
     suspend fun searchPlaylist() {
+        if(!isApiServerOpened || user == null) return
         states[SearchCategory.Playlist] = SearchState.SEARCHING
         val playlists = ArrayList<Playlist>()
         playlists.addAll(user!!.searchPlaylist(input, context))
@@ -162,12 +163,13 @@ fun Search(navController: NavController) {
         states[SearchCategory.Playlist] = SearchState.SUCCESS
     }
     suspend fun searchUser() {
+        if(!isApiServerOpened || user == null) return
         states[SearchCategory.User] = SearchState.SEARCHING
         val users = ArrayList<OtherUser>()
-        users.addAll(BlugonTJApi.searchUser(input, context))
+        users.addAll(TjFinderApi.searchUser(input, context))
         val split = input.split("#")
         if(split.size == 2) {
-            val response = BlugonTJApi.getUser(split.first(), split.last())
+            val response = TjFinderApi.getUser(split.first(), split.last())
             if(response != null) users.add(response)
         }
         if(users.isEmpty()) {
@@ -186,6 +188,8 @@ fun Search(navController: NavController) {
             states.setAll(SearchState.NOT_INTERNET_AVAILABLE)
             return@LaunchedEffect
         }
+        isApiServerOpened = isApiServerOpened()
+        if(!isApiServerOpened) return@LaunchedEffect
         user = User.login(context)?: return@LaunchedEffect
         if(initValue.input != "") {
             results.clear()
@@ -206,9 +210,7 @@ fun Search(navController: NavController) {
     }
 
     var isFocusedSearchBar by remember { mutableStateOf(false) }
-    if(!isFocusedSearchBar) {
-        focusManager.clearFocus()
-    }
+    if(!isFocusedSearchBar) focusManager.clearFocus()
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
@@ -242,7 +244,6 @@ fun Search(navController: NavController) {
                             imeAction = ImeAction.Search
                         ),
                         keyboardActions = KeyboardActions(onSearch = { //검색 버튼 눌렀을때
-                            if(user == null) return@KeyboardActions
                             results.clear()
                             focusManager.clearFocus()
                             if(input.isBlank()) return@KeyboardActions
@@ -404,6 +405,10 @@ fun Search(navController: NavController) {
                 if(states[category] != SearchState.SUCCESS) {
                     enableScroll = false
                     items(1) {
+                        if(category != SearchCategory.Song) {
+                            if(!isApiServerOpened) return@items CenterText(text = "서버 연결에 실패했습니다")
+                            if(user == null) return@items CenterText(text = "로그인 후 이용 가능합니다")
+                        }
                         Column(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -427,7 +432,7 @@ fun Search(navController: NavController) {
                                 CircularProgressIndicator(
                                     modifier = Modifier.width(48.dp),
                                     color = ThemeColor.Main,
-                                    trackColor = ThemeColor.MainGray,
+                                    trackColor = ThemeColor.DarkMain,
                                 )
                             }
                         }
@@ -495,9 +500,11 @@ suspend fun search(
         addAll(singerData.await())
     }
 
+    if(user == null) return data.distinctBy { it.id }
+
     return ArrayList<Song>().apply {
         val jobs = ArrayList<Deferred<Song?>>()
-        user?.memoList()?.forEach { (songId, memo) ->
+        user.memoList()?.forEach { (songId, memo) ->
             if(!memo.contains(input)) return@forEach
             jobs.add(GlobalScope.async { SongManager[songId, SongCacheDB(context)] })
         }

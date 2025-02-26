@@ -1,8 +1,10 @@
 package kr.blugon.tjfinder.ui.layout.state
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyItemScope
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -15,47 +17,48 @@ import kr.blugon.tjfinder.ui.theme.Pretendard
 import kr.blugon.tjfinder.ui.theme.ThemeColor
 
 @Composable
-fun Loading(text: String? = null) {
-    Column (
-        modifier = Modifier.fillMaxSize(),
+fun CenterText(
+    modifier: Modifier = Modifier.fillMaxSize(),
+    text: String,
+    fontSize: Float = 30f,
+    fontWeight: FontWeight = FontWeight.Normal
+) {
+    Column(
+        modifier = modifier,
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
             modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 5.dp),
-            text = text?: "곡 목록 로딩중",
+            text = text,
             fontFamily = Pretendard,
-            fontSize = TextUnit(30f, TextUnitType.Sp),
-            fontWeight = FontWeight.Medium,
+            fontSize = TextUnit(fontSize, TextUnitType.Sp),
+            fontWeight = fontWeight,
             color = ThemeColor.Main
-        )
-        CircularProgressIndicator(
-            modifier = Modifier.width(48.dp),
-            color = ThemeColor.Main,
-            trackColor = ThemeColor.DarkMain,
         )
     }
 }
 
+
 @Composable
-fun LazyItemScope.Loading(text: String? = null) {
+fun LazyItemScope.CenterText(
+    modifier: Modifier = Modifier.fillMaxSize().fillParentMaxSize(),
+    text: String,
+    fontSize: Float = 30f,
+    fontWeight: FontWeight = FontWeight.Normal
+) {
     Column (
-        modifier = Modifier.fillMaxSize().fillParentMaxSize(),
+        modifier = modifier,
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
             modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 5.dp),
-            text = text?: "곡 목록 로딩중",
+            text = text,
             fontFamily = Pretendard,
-            fontSize = TextUnit(30f, TextUnitType.Sp),
-            fontWeight = FontWeight.Medium,
+            fontSize = TextUnit(fontSize, TextUnitType.Sp),
+            fontWeight = fontWeight,
             color = ThemeColor.Main
-        )
-        CircularProgressIndicator(
-            modifier = Modifier.width(48.dp),
-            color = ThemeColor.Main,
-            trackColor = ThemeColor.DarkMain,
         )
     }
 }
