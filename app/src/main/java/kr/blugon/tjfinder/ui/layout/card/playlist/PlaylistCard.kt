@@ -182,7 +182,7 @@ fun PlaylistCard(
                         showBottomSheet = it
                     },
                     reload = reload,
-                    user
+                    user = user
                 )
             }
         }

@@ -1,34 +1,28 @@
 package kr.blugon.tjfinder.ui.screen.child.user
 
-import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.unit.TextUnit
-import androidx.compose.ui.unit.TextUnitType
 import androidx.navigation.NavController
 import kr.blugon.tjfinder.module.SettingManager
 import kr.blugon.tjfinder.ui.layout.PretendardText
 import kr.blugon.tjfinder.ui.layout.card.SettingCard
 import kr.blugon.tjfinder.ui.layout.card.SettingItem
-import kr.blugon.tjfinder.ui.theme.Pretendard
-import kr.blugon.tjfinder.ui.theme.ThemeColor
 
 class SettingCategory(val name: String, val code: String) {
     companion object {
@@ -114,7 +108,7 @@ fun SettingScreen(navController: NavController) {
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
-                            imageVector = Icons.Filled.ArrowBack,
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = null,
                             tint = Color.White
                         )
@@ -126,7 +120,7 @@ fun SettingScreen(navController: NavController) {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center, //asdf
+            verticalArrangement = Arrangement.Center, //asdf <- 과거의 나는 무슨 생각으로 이런 메모를 남겼을까
         ) {
             items(SettingCategory.entries.size) { index ->
                 val category = SettingCategory.entries[index]

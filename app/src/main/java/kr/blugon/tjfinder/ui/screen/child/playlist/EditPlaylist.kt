@@ -12,7 +12,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -29,20 +29,21 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import kotlinx.coroutines.launch
-import kr.blugon.tjfinder.module.*
-import kr.blugon.tjfinder.utils.api.TjFinderApi.editThumbnailOfPlaylist
-import kr.blugon.tjfinder.utils.api.TjFinderApi.editTitleOfPlaylist
-import kr.blugon.tjfinder.utils.api.TjFinderApi.playlists
+import kr.blugon.tjfinder.module.MyPlaylist
 import kr.blugon.tjfinder.module.State
-import kr.blugon.tjfinder.utils.api.FinderApi
-import kr.blugon.tjfinder.utils.api.FinderResponse
+import kr.blugon.tjfinder.module.User
 import kr.blugon.tjfinder.ui.layout.PretendardText
 import kr.blugon.tjfinder.ui.layout.state.Loading
 import kr.blugon.tjfinder.ui.layout.state.NotConnectedNetwork
 import kr.blugon.tjfinder.ui.screen.child.EditTextField
 import kr.blugon.tjfinder.ui.screen.child.playlist.EditPlaylist.playlist
 import kr.blugon.tjfinder.ui.theme.ThemeColor
+import kr.blugon.tjfinder.utils.api.FinderApi
+import kr.blugon.tjfinder.utils.api.FinderResponse
 import kr.blugon.tjfinder.utils.api.TjFinderApi
+import kr.blugon.tjfinder.utils.api.TjFinderApi.editThumbnailOfPlaylist
+import kr.blugon.tjfinder.utils.api.TjFinderApi.editTitleOfPlaylist
+import kr.blugon.tjfinder.utils.api.TjFinderApi.playlists
 import kr.blugon.tjfinder.utils.isInternetAvailable
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -135,7 +136,7 @@ fun EditPlaylistScreen(navController: NavController) {
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
-                            imageVector = Icons.Filled.ArrowBack,
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = null,
                             tint = Color.White
                         )

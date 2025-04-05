@@ -154,15 +154,13 @@ fun BottomNav(navController: NavHostController, mainActivity: MainActivity) {
             ?: BottomScreen.Home.name
     )
 
-//    onBack(currentScreen, navController)
-//    navController.enableOnBackPressed(false)
-
-    if(Screen.valueOf(backStackEntry?.destination?.route ?: "")?.isFullScreen == true) return BottomNavHost(navController = navController, mainActivity)
+    fun isFullScreen(): Boolean = Screen.valueOf(backStackEntry?.destination?.route ?: "")?.isFullScreen == true
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         containerColor = ThemeColor.Background,
         bottomBar = {
+            if(isFullScreen()) return@Scaffold
             NavigationBar(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -178,7 +176,6 @@ fun BottomNav(navController: NavHostController, mainActivity: MainActivity) {
                 }
                 BottomScreen.entries.forEach { screen ->
                     Item(
-//                        selected = selectedTab.number == screen.number || selected[screen] == true,
                         selected = currentScreen!!.number == screen.number || selected[screen] == true,
                         screen = screen,
                         navController = navController,
@@ -187,7 +184,9 @@ fun BottomNav(navController: NavHostController, mainActivity: MainActivity) {
             }
         }
     ) {
-        Box(modifier = Modifier.padding(it)) {
+        Box(
+            modifier = if(!isFullScreen()) Modifier.padding(it) else Modifier
+        ) {
             BottomNavHost(navController = navController, mainActivity)
         }
     }

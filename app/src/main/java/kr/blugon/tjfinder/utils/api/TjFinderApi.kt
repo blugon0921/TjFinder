@@ -123,7 +123,7 @@ object TjFinderApi {
             withContext(Dispatchers.IO) {
                 URLEncoder.encode(uid, "utf-8")
             }
-        }&thumbnail=${
+        }&profileImage=${
             withContext(Dispatchers.IO) {
                 URLEncoder.encode(newImageUrl, "utf-8")
             }

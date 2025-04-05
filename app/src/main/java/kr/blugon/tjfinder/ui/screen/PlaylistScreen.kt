@@ -128,23 +128,6 @@ fun PlaylistScreen(navController: NavController) {
 
         if(!isApiServerOpened) return CenterText(text = "서버 연결에 실패했습니다")
         if(user == null) return CenterText(text = "로그인 후 이용 가능합니다")
-        println("asdf")
-        println("asdf")
-        println("asdf")
-        println("asdf")
-        println("asdf")
-        println("asdf")
-        println("asdf")
-        println("asdf")
-        println("asdf")
-        println("asdf")
-        println("asdf")
-        println("asdf")
-        println("asdf")
-        println("asdf")
-        println("asdf")
-        println("asdf")
-        println("asdf")
 
         val listState = rememberLazyListState()
         var enableScroll by remember { mutableStateOf(false) }

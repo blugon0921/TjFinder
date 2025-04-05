@@ -20,6 +20,7 @@ import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.google.firebase.FirebaseApp
 import kotlinx.coroutines.launch
+import kr.blugon.tjfinder.module.LoginManager
 import kr.blugon.tjfinder.utils.api.TjFinderApi.loadMemoList
 import kr.blugon.tjfinder.module.User
 import kr.blugon.tjfinder.module.database.NewCacheDB
@@ -55,9 +56,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-const val VERSION = "Beta 1.7.0"
-//@SuppressLint("StaticFieldLeak")
-//lateinit var navController: NavHostController
+const val VERSION = "Beta 1.7.1"
 @Composable
 fun Greeting(mainActivity: MainActivity) {
     val context = LocalContext.current

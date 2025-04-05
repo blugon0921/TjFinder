@@ -54,6 +54,7 @@ fun MyPlaylistBottomSheetItems(
 
     BottomSheetItem(iconId = R.drawable.pen, iconDescription = "editPen", text = "편집") { //편집
         EditPlaylist.playlist = playlist
+        setShowBottomSheet(false)
         navController.navigateScreen(ChildScreen.EditPlaylist)
     }
     var showDeleteModal by remember { mutableStateOf(false) }

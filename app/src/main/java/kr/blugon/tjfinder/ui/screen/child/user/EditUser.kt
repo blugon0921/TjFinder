@@ -11,13 +11,14 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -28,26 +29,27 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import kotlinx.coroutines.launch
-import kr.blugon.tjfinder.module.*
-import kr.blugon.tjfinder.utils.api.TjFinderApi.editDescription
-import kr.blugon.tjfinder.utils.api.TjFinderApi.editIsPrivate
-import kr.blugon.tjfinder.utils.api.TjFinderApi.editName
-import kr.blugon.tjfinder.utils.api.TjFinderApi.editProfileImage
-import kr.blugon.tjfinder.utils.api.TjFinderApi.playlists
 import kr.blugon.tjfinder.module.State
-import kr.blugon.tjfinder.utils.api.FinderApi
-import kr.blugon.tjfinder.utils.api.FinderResponse
+import kr.blugon.tjfinder.module.User
 import kr.blugon.tjfinder.ui.layout.PretendardText
 import kr.blugon.tjfinder.ui.layout.state.Loading
 import kr.blugon.tjfinder.ui.layout.state.NotConnectedNetwork
 import kr.blugon.tjfinder.ui.screen.child.EditTextField
 import kr.blugon.tjfinder.ui.screen.child.playlist.FileUtil
 import kr.blugon.tjfinder.ui.theme.ThemeColor
+import kr.blugon.tjfinder.utils.api.FinderApi
+import kr.blugon.tjfinder.utils.api.FinderResponse
 import kr.blugon.tjfinder.utils.api.TjFinderApi
+import kr.blugon.tjfinder.utils.api.TjFinderApi.editDescription
+import kr.blugon.tjfinder.utils.api.TjFinderApi.editIsPrivate
+import kr.blugon.tjfinder.utils.api.TjFinderApi.editName
+import kr.blugon.tjfinder.utils.api.TjFinderApi.editProfileImage
+import kr.blugon.tjfinder.utils.api.TjFinderApi.playlists
 import kr.blugon.tjfinder.utils.isInternetAvailable
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -115,20 +117,15 @@ fun EditUserScreen(navController: NavController) {
         FileUtil.copyToFile(context, uri, file)
 
         val requestFile = file.asRequestBody("image/*".toMediaTypeOrNull())
-        val body = MultipartBody.Part.createFormData("image", file.name, requestFile)
+        val requestBody = MultipartBody.Part.createFormData("image", file.name, requestFile)
 
-        retrofit.sendImage(body).enqueue(object: Callback<FinderResponse> {
+        retrofit.sendImage(requestBody).enqueue(object: Callback<FinderResponse> {
             override fun onResponse(call: Call<FinderResponse>, response: Response<FinderResponse>) {
                 val body = response.body()
                 if(response.isSuccessful && body?.code == 200) {
                     profileImage.value = body.imagePath!!
                     Toast.makeText(context, "이미지 전송 성공", Toast.LENGTH_SHORT).show()
-                } else {
-                    if(response.message() == "Request Entity Too Large") {
-                        return Toast.makeText(context, "이미지가 너무 큽니다. 1MB까지 업로드 할 수 있습니다", Toast.LENGTH_SHORT).show()
-                    }
-                    Toast.makeText(context, "이미지 업로드 실패", Toast.LENGTH_SHORT).show()
-                }
+                } else Toast.makeText(context, "이미지 업로드 실패", Toast.LENGTH_SHORT).show()
             }
             override fun onFailure(call: Call<FinderResponse>, t: Throwable) = Toast.makeText(context, "이미지 업로드 실패", Toast.LENGTH_SHORT).show()
         })
@@ -149,7 +146,7 @@ fun EditUserScreen(navController: NavController) {
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
-                            imageVector = Icons.Filled.ArrowBack,
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = null,
                             tint = Color.White
                         )
@@ -178,9 +175,11 @@ fun EditUserScreen(navController: NavController) {
                             .clip(CircleShape)
                             .border(2.dp, Color(255, 255, 255, 64), CircleShape),
                         model = ImageRequest.Builder(LocalContext.current)
-                            .data(Uri.parse(user!!.photoUrl))
+                            .data(Uri.parse(profileImage.value))
                             .build(),
                         contentDescription = "profile",
+                        contentScale = ContentScale.Crop,
+                        alignment = Alignment.Center
                     )
                 }
                 PretendardText( //사진 업로드
@@ -244,7 +243,7 @@ fun EditUserScreen(navController: NavController) {
                             state = State.LOADING
                             val successCheck = listOf( //서버 업로드
                                 defaultProfileImage == profileImage.value ||
-                                user!!.editProfileImage(name.value.ifBlank { defaultProfileImage }),
+                                user!!.editProfileImage(profileImage.value.ifBlank { defaultProfileImage }),
 
                                 defaultName.trim() == name.value.trim() ||
                                 user!!.editName(name.value.ifBlank {

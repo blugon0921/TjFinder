@@ -131,10 +131,7 @@ fun UserScreen(navController: NavController) {
                             modifier = Modifier
                                 .padding(top = 20.dp, end = 20.dp)
                                 .size(25.dp)
-                                .clickable {
-                                    navController.navigateScreen(ChildScreen.Setting)
-//                                Toast.makeText(context, "추가 예정", Toast.LENGTH_SHORT).show()
-                                },
+                                .clickable { navController.navigateScreen(ChildScreen.Setting) },
                             imageVector = ImageVector.vectorResource(R.drawable.gear),
                             contentDescription = "setting",
                             tint = Color.White
