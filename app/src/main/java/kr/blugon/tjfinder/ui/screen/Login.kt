@@ -33,6 +33,7 @@ import kr.blugon.tjfinder.utils.api.TjFinderApi
 import kr.blugon.tjfinder.module.LoginManager
 import kr.blugon.tjfinder.module.User
 import kr.blugon.tjfinder.ui.layout.navigation.BottomScreen
+import kr.blugon.tjfinder.ui.layout.navigation.navigateMainScreen
 import kr.blugon.tjfinder.ui.layout.navigation.navigateScreen
 import kr.blugon.tjfinder.ui.theme.Pretendard
 import kr.blugon.tjfinder.ui.theme.ThemeColor
@@ -71,7 +72,8 @@ fun LoginScreen(navController: NavController) {
 
     val token = stringResource(id = R.string.default_web_client_id)
     if(isLogin) {
-        navController.navigateScreen(BottomScreen.Home)
+//        navController.navigateScreen(BottomScreen.Home)
+        navController.navigateMainScreen(BottomScreen.Home)
         return
     }
     LazyColumn(

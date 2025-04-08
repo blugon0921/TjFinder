@@ -19,7 +19,7 @@ import kr.blugon.tjfinder.utils.api.TjFinderApi.getPlaylist
 import kr.blugon.tjfinder.module.Playlist
 import kr.blugon.tjfinder.module.User
 import kr.blugon.tjfinder.ui.layout.*
-import kr.blugon.tjfinder.ui.layout.navigation.BottomSheet
+import kr.blugon.tjfinder.ui.layout.BottomSheet
 import kr.blugon.tjfinder.ui.layout.navigation.ChildScreen
 import kr.blugon.tjfinder.ui.layout.navigation.navigateScreen
 import kr.blugon.tjfinder.ui.screen.child.playlist.InPlaylist

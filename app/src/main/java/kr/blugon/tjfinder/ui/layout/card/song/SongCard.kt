@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import kr.blugon.tjfinder.module.*
 import kr.blugon.tjfinder.ui.layout.*
-import kr.blugon.tjfinder.ui.layout.navigation.BottomSheet
+import kr.blugon.tjfinder.ui.layout.BottomSheet
 import kr.blugon.tjfinder.ui.theme.ThemeColor
 import kr.blugon.tjfinder.utils.isApiServerOpened
 

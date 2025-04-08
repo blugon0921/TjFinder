@@ -12,7 +12,7 @@ import kr.blugon.tjfinder.utils.api.TjFinderApi.isExistInLibrary
 import kr.blugon.tjfinder.utils.api.TjFinderApi.removePlaylistFromLibrary
 import kr.blugon.tjfinder.module.Playlist
 import kr.blugon.tjfinder.module.User
-import kr.blugon.tjfinder.ui.layout.navigation.BottomSheetItem
+import kr.blugon.tjfinder.ui.layout.BottomSheetItem
 
 @Composable
 fun PlaylistBottomSheetItems(

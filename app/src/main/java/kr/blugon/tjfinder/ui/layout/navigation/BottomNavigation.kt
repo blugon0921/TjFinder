@@ -4,6 +4,10 @@ import android.app.Activity
 import androidx.activity.compose.BackHandler
 import androidx.annotation.StringRes
 import androidx.compose.animation.*
+import androidx.compose.animation.core.EaseInOut
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -22,6 +26,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import kr.blugon.tjfinder.MainActivity
 import kr.blugon.tjfinder.R
 import kr.blugon.tjfinder.module.LoginManager
@@ -42,64 +49,47 @@ import kr.blugon.tjfinder.ui.theme.ThemeColor
 fun BottomNavHost(navController: NavHostController, mainActivity: MainActivity) {
     NavHost(
         navController = navController,
-        startDestination = BottomScreen.Home.name,
+        startDestination = DefaultScreen.Main.name,
+//        startDestination = BottomScreen.Home.name,
         enterTransition = { //등장 애니메이션
             val before = Screen.valueOf(this.initialState.destination.route!!)
             val target = Screen.valueOf(this.targetState.destination.route!!)
-            if(before is BottomScreen && target is ChildScreen) { //Bottom -> Child
+            if(before == DefaultScreen.Main && target is ChildScreen) { //Main -> Child
                 slideInHorizontally { it }
-            } else if(before is ChildScreen && target is BottomScreen) { // Child -> Bottom
+            } else if(before is ChildScreen && target == DefaultScreen.Main) { // Child -> Main
                 scaleIn()
-            } else if(before is BottomScreen && target is BottomScreen) { // Bottom -> Bottom
-                slideInHorizontally {
-                    if (BottomScreen.entries.indexOf(before) < BottomScreen.entries.indexOf(target)) it
-                    else if(BottomScreen.entries.indexOf(before) == BottomScreen.entries.indexOf(target)) 0
-                    else -it
-                }
-            } else slideInHorizontally { -it }
+            } else slideInHorizontally { it }
         },
         exitTransition = { //퇴장 애니메이션
             val before = Screen.valueOf(this.initialState.destination.route!!)
             val target = Screen.valueOf(this.targetState.destination.route!!)
-            if(before is BottomScreen && target is ChildScreen) { //Bottom -> Child
+            if(before == DefaultScreen.Main && target is ChildScreen) { //Main -> Child
                 scaleOut()
-            } else if(before is ChildScreen && target is BottomScreen) { // Child -> Bottom
+            } else if(before is ChildScreen && target == DefaultScreen.Main) { // Child -> Main
                 slideOutHorizontally { it }
-            } else if(before is BottomScreen && target is BottomScreen) { // Bottom -> Bottom
-                slideOutHorizontally {
-                    if (BottomScreen.entries.indexOf(before) < BottomScreen.entries.indexOf(target)) -it
-                    else if(BottomScreen.entries.indexOf(before) == BottomScreen.entries.indexOf(target)) 0
-                    else it
-                }
-            } else slideOutHorizontally { -it }
+            } else slideOutHorizontally { it }
         }
     ) {
         composable(DefaultScreen.Login, navController) { LoginScreen(navController) }
 
-        composable(BottomScreen.NewSongs, navController) { NewSongs(navController) }
+        composable(ChildScreen.SearchPlaylist, navController) { InPlaylistScreen(navController) }
+        composable(ChildScreen.SearchOtherUser, navController) { InOtherUserScreen(navController) }
 
-        composable(BottomScreen.Search, navController) { Search(navController) }.let {
-            composable(ChildScreen.SearchPlaylist, navController) { InPlaylistScreen(navController) }
-            composable(ChildScreen.SearchOtherUser, navController) { InOtherUserScreen(navController) }
-        }
+//        composable(BottomScreen.Home, navController) {
+//            val isSuggestPlaylist = SettingManager[mainActivity, SettingType.suggestPlaylist]
+//            if(isSuggestPlaylist) PlaylistHome(navController)
+//            else Home(navController)
+//        }
 
-        composable(BottomScreen.Home, navController) {
-            val isSuggestPlaylist = SettingManager[mainActivity, SettingType.suggestPlaylist]
-            if(isSuggestPlaylist) PlaylistHome(navController)
-            else Home(navController)
-        }
+        composable(ChildScreen.PlaylistItem, navController) { InPlaylistScreen(navController) }
+        composable(ChildScreen.CreatePlaylist, navController) { CreatePlaylist(navController) }
+        composable(ChildScreen.EditPlaylist, navController) { EditPlaylistScreen(navController) }
 
-        composable(BottomScreen.Playlist, navController) { PlaylistScreen(navController) }.let {
-            composable(ChildScreen.PlaylistItem, navController) { InPlaylistScreen(navController) }
-            composable(ChildScreen.CreatePlaylist, navController) { CreatePlaylist(navController) }
-            composable(ChildScreen.EditPlaylist, navController) { EditPlaylistScreen(navController) }
-        }
+        composable(ChildScreen.OtherUserItem, navController) { InOtherUserScreen(navController) }
+        composable(ChildScreen.EditUser, navController) { EditUserScreen(navController) }
+        composable(ChildScreen.Setting, navController) { SettingScreen(navController) }
 
-        composable(BottomScreen.User, navController) { UserScreen(navController) }.let {
-            composable(ChildScreen.OtherUserItem, navController) { InOtherUserScreen(navController) }
-            composable(ChildScreen.EditUser, navController) { EditUserScreen(navController) }
-            composable(ChildScreen.Setting, navController) { SettingScreen(navController) }
-        }
+        composable(DefaultScreen.Main, navController) { MainScreen(navController) }
     }
 }
 fun NavGraphBuilder.composable(
@@ -110,30 +100,56 @@ fun NavGraphBuilder.composable(
     onBack(navController)
     compose()
 }
-fun NavController.navigateScreen(screen: Screen) {
+fun NavController.navigateScreen(screen: Screen, coroutineScope: CoroutineScope? = null) {
 //    if(screen is BottomScreen || screen is ChildScreen) {
 //        selectedTab = if(screen is BottomScreen) screen else (screen as ChildScreen).parent
 //        if(screen is BottomScreen) return
 //    }
     if(this.currentBackStackEntry?.destination?.route == screen.name) return
+    if(screen is BottomScreen) {
+        if(this.currentScreen != DefaultScreen.Main) {
+            this.navigate(DefaultScreen.Main.name) {
+                launchSingleTop = true
+                restoreState = true
+            }
+        }
+        if(coroutineScope == null) return
+        coroutineScope.launch {
+            mainStates.pagerState!!.animateScrollToPage(
+                screen.number,
+                animationSpec = tween(durationMillis = 300, easing = FastOutSlowInEasing)
+            )
+        }
+        return
+    }
     this.navigate(screen.name) {
         launchSingleTop = true
         restoreState = true
     }
 }
 
-
 @Composable
-fun onBack(navController: NavController) {
-    val activity = LocalContext.current as Activity
-    BackHandler {
-        when (navController.currentScreen) {
-            DefaultScreen.Login -> activity.finish()
-            BottomScreen.Home -> activity.finish()
-
-            is BottomScreen -> navController.navigateScreen(BottomScreen.Home)
-            else -> navController.navigateUp()
+fun NavController.navigateMainScreen(screen: BottomScreen) {
+    val coroutineScope = rememberCoroutineScope()
+    if(this.currentScreen != DefaultScreen.Main) {
+        this.navigate(DefaultScreen.Main.name) {
+            launchSingleTop = true
+            restoreState = true
         }
+    }
+    coroutineScope.launch {
+        mainStates.pagerState!!.animateScrollToPage(screen.number)
+    }
+}
+fun NavController.navigateMainScreen(screen: BottomScreen, coroutineScope: CoroutineScope) {
+    if(this.currentScreen != DefaultScreen.Main) {
+        this.navigate(DefaultScreen.Main.name) {
+            launchSingleTop = true
+            restoreState = true
+        }
+    }
+    coroutineScope.launch {
+        mainStates.pagerState!!.animateScrollToPage(screen.number)
     }
 }
 
@@ -142,17 +158,12 @@ val NavController.currentScreen: Screen?
     get() {
         return Screen.valueOf(
             if (LoginManager.getSavedUid(context) == null) DefaultScreen.Login.name
-            else this.currentBackStackEntry?.destination?.route ?: BottomScreen.Home.name
+            else this.currentBackStackEntry?.destination?.route ?: DefaultScreen.Main.name
         )
     }
 @Composable
 fun BottomNav(navController: NavHostController, mainActivity: MainActivity) {
-    val context = LocalContext.current
     val backStackEntry by navController.currentBackStackEntryAsState()
-    val currentScreen = Screen.valueOf(
-        if (LoginManager.getSavedUid(context) == null) DefaultScreen.Login.name else backStackEntry?.destination?.route
-            ?: BottomScreen.Home.name
-    )
 
     fun isFullScreen(): Boolean = Screen.valueOf(backStackEntry?.destination?.route ?: "")?.isFullScreen == true
 
@@ -169,14 +180,9 @@ fun BottomNav(navController: NavHostController, mainActivity: MainActivity) {
                 containerColor = ThemeColor.Navigation
             ) {
                 val selected = HashMap<Screen, Boolean>()
-                ChildScreen.entries.forEach { child ->
-                    val parent = child.parent
-                    if(currentScreen !is ChildScreen) return@forEach
-                    if(currentScreen.parent.number == parent.number) selected[parent] = true
-                }
                 BottomScreen.entries.forEach { screen ->
                     Item(
-                        selected = currentScreen!!.number == screen.number || selected[screen] == true,
+                        selected = mainStates.pagerState?.currentPage == screen.number || selected[screen] == true,
                         screen = screen,
                         navController = navController,
                     )
@@ -193,11 +199,13 @@ fun BottomNav(navController: NavHostController, mainActivity: MainActivity) {
 }
 
 @Composable
-fun RowScope.Item(
+private fun RowScope.Item(
     selected: Boolean,
     screen: BottomScreen,
     navController: NavHostController,
 ) {
+    val coroutineScope = rememberCoroutineScope()
+
     NavigationBarItem(
         modifier = Modifier.padding(0.dp, 8.dp, 0.dp, 0.dp),
         selected = selected,
@@ -231,69 +239,7 @@ fun RowScope.Item(
         onClick = {
             if(navController.graph.route == screen.name) return@NavigationBarItem
 //            if(selectedTab.name == screen.name) return@NavigationBarItem
-            navController.navigateScreen(screen)
+            navController.navigateScreen(screen, coroutineScope)
         }
     )
-}
-
-interface Screen {
-    val isFullScreen: Boolean
-    val number: Int
-
-    val name: String
-
-    companion object {
-        fun valueOf(name: String): Screen? {
-//        fun valueOf(name: String): Screen {
-            return entries.firstOrNull { it.name == name }
-//            return BottomScreen.Home
-        }
-
-        val entries: List<Screen>
-            get() = ArrayList<Screen>().apply {
-                addAll(DefaultScreen.entries)
-                addAll(BottomScreen.entries)
-                addAll(ChildScreen.entries)
-            }
-    }
-}
-
-enum class DefaultScreen(
-    override val isFullScreen: Boolean,
-    override val number: Int,
-): Screen {
-    Login(true, 2);
-}
-
-enum class BottomScreen(
-    @StringRes val title: Int,
-    val icon: Int,
-    override val number: Int,
-    override val isFullScreen: Boolean = false
-): Screen {
-    NewSongs(R.string.text_newsongs, R.drawable.starlight, 0),
-    Search(R.string.text_search, R.drawable.search, 1),
-    Home(R.string.text_home, R.drawable.home, 2),
-    Playlist(R.string.text_playlist, R.drawable.playlist, 3),
-    User(R.string.text_user, R.drawable.user, 4)
-}
-
-
-enum class ChildScreen(
-    val parent: BottomScreen,
-    override val isFullScreen: Boolean = false
-): Screen {
-    PlaylistItem(BottomScreen.Playlist),
-    CreatePlaylist(BottomScreen.Playlist, true),
-    EditPlaylist(BottomScreen.Playlist, true),
-
-    SearchPlaylist(BottomScreen.Search),
-    SearchOtherUser(BottomScreen.Search),
-
-    OtherUserItem(BottomScreen.User),
-
-    EditUser(BottomScreen.User, true),
-    Setting(BottomScreen.User, true);
-
-    override val number: Int get() = this.parent.number
 }

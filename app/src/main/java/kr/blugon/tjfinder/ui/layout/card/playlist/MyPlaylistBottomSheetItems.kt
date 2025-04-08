@@ -30,7 +30,7 @@ import kr.blugon.tjfinder.utils.api.TjFinderApi.deletePlaylist
 import kr.blugon.tjfinder.utils.api.TjFinderApi.editIsPrivateOfPlaylist
 import kr.blugon.tjfinder.module.MyPlaylist
 import kr.blugon.tjfinder.module.User
-import kr.blugon.tjfinder.ui.layout.navigation.BottomSheetItem
+import kr.blugon.tjfinder.ui.layout.BottomSheetItem
 import kr.blugon.tjfinder.ui.layout.navigation.ChildScreen
 import kr.blugon.tjfinder.ui.layout.ConfirmCancelModal
 import kr.blugon.tjfinder.ui.layout.navigation.navigateScreen

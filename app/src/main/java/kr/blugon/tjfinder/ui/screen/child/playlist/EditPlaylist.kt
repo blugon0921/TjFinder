@@ -17,6 +17,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -33,6 +34,7 @@ import kr.blugon.tjfinder.module.MyPlaylist
 import kr.blugon.tjfinder.module.State
 import kr.blugon.tjfinder.module.User
 import kr.blugon.tjfinder.ui.layout.PretendardText
+import kr.blugon.tjfinder.ui.layout.card.playlist.PlaylistThumbnail
 import kr.blugon.tjfinder.ui.layout.state.Loading
 import kr.blugon.tjfinder.ui.layout.state.NotConnectedNetwork
 import kr.blugon.tjfinder.ui.screen.child.EditTextField
@@ -102,9 +104,9 @@ fun EditPlaylistScreen(navController: NavController) {
         FileUtil.copyToFile(context, uri, file)
 
         val requestFile = file.asRequestBody("image/*".toMediaTypeOrNull())
-        val body = MultipartBody.Part.createFormData("image", file.name, requestFile)
+        val requestBody = MultipartBody.Part.createFormData("image", file.name, requestFile)
 
-        retrofit.sendImage(body).enqueue(object: Callback<FinderResponse>{
+        retrofit.sendImage(requestBody).enqueue(object: Callback<FinderResponse>{
             override fun onResponse(call: Call<FinderResponse>, response: Response<FinderResponse>) {
                 val body = response.body()
                 if(response.isSuccessful && body?.code == 200) {
@@ -162,7 +164,8 @@ fun EditPlaylistScreen(navController: NavController) {
                     AsyncImage( //썸네일
                         modifier = Modifier
                             .size(100.dp)
-                            .border(2.dp, Color(255, 255, 255, 64), RoundedCornerShape(0.dp)),
+                            .clip(RoundedCornerShape(8.dp))
+                            .border(2.dp, Color(255, 255, 255, 64), RoundedCornerShape(8.dp)),
                         model = ImageRequest.Builder(context)
                             .data(thumbnail)
                             .build(),

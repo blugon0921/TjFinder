@@ -1,4 +1,4 @@
-package kr.blugon.tjfinder.ui.layout.navigation
+package kr.blugon.tjfinder.ui.layout
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*

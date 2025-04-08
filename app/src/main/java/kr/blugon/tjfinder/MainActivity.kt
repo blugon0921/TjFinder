@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -56,7 +57,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-const val VERSION = "Beta 1.7.1"
+const val VERSION = "Beta 1.7.2"
 @Composable
 fun Greeting(mainActivity: MainActivity) {
     val context = LocalContext.current
@@ -88,11 +89,18 @@ fun Greeting(mainActivity: MainActivity) {
             shape = RoundedCornerShape(12.dp),
             onDismissRequest = {},
             text = {
-                PretendardText(
-                    "${latestVersion?.version}버전 업데이트가 있습니다.\n업데이트 파일을 다운로드하시겠습니까?",
-                    fontSize = 15f,
-                    fontWeight = FontWeight.SemiBold
-                )
+                Column {
+                    PretendardText(
+                        "${latestVersion?.version}버전 업데이트가 있습니다.\n업데이트 파일을 다운로드하시겠습니까?",
+                        fontSize = 15f,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                    PretendardText(
+                        text = "(업데이트 하지 않을 시 정상 작동을 보장하지 않습니다.)",
+                        fontSize = 12f,
+                        fontWeight = FontWeight.Medium
+                    )
+                }
             },
             dismissButton = {
                 Button(

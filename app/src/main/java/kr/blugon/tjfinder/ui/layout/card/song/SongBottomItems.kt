@@ -17,12 +17,12 @@ import kr.blugon.tjfinder.module.Song
 import kr.blugon.tjfinder.module.User
 import kr.blugon.tjfinder.module.search.SearchInfo
 import kr.blugon.tjfinder.ui.layout.navigation.BottomScreen
-import kr.blugon.tjfinder.ui.layout.navigation.BottomSheetItem
+import kr.blugon.tjfinder.ui.layout.BottomSheetItem
 import kr.blugon.tjfinder.ui.layout.navigation.ChildScreen
+import kr.blugon.tjfinder.ui.layout.navigation.navigateMainScreen
 import kr.blugon.tjfinder.ui.layout.navigation.navigateScreen
 import kr.blugon.tjfinder.ui.screen.child.playlist.InPlaylist
 import kr.blugon.tjfinder.ui.screen.initValue
-import kr.blugon.tjfinder.utils.isApiServerOpened
 
 @Composable
 fun SongBottomItems(
@@ -63,7 +63,7 @@ fun SongBottomItems(
             BottomSheetItem(iconId = R.drawable.user, iconDescription = "search", text = "해당 가수 검색") { //가수 검색
                 showBottomSheet.value = false
                 initValue = SearchInfo(song.singer)
-                navController.navigateScreen(BottomScreen.Search)
+                navController.navigateMainScreen(BottomScreen.Search, coroutineScope)
             }
             BottomSheetItem(iconId = R.drawable.file, iconDescription = "lyrics", text = "가사") {
                 showLyrics.value = true

@@ -10,6 +10,7 @@ import java.net.URLEncoder
 
 object TjFinderApi {
     const val URL = "https://tjfinderapi.blugon.kr"
+//    const val URL = "http://172.30.1.10"
 
     suspend fun registerUser(uid: String, email: String, name: String, profileImage: String): User? {
         val url = "$URL/user/register?uid=${

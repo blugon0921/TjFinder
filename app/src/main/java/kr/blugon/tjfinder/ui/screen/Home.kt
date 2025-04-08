@@ -27,6 +27,7 @@ import kr.blugon.tjfinder.module.database.SongManager
 import kr.blugon.tjfinder.ui.layout.*
 import kr.blugon.tjfinder.ui.layout.card.song.Top100SongCard
 import kr.blugon.tjfinder.ui.layout.navigation.BottomScreen
+import kr.blugon.tjfinder.ui.layout.navigation.navigateMainScreen
 import kr.blugon.tjfinder.ui.layout.navigation.navigateScreen
 import kr.blugon.tjfinder.ui.theme.ThemeColor
 import kr.blugon.tjfinder.utils.api.TjFinderApi.loadMemoList
@@ -81,7 +82,7 @@ fun Home(navController: NavController) {
             modifier = Modifier
                 .clickable {
                     searchFocus = true
-                    navController.navigateScreen(BottomScreen.Search)
+                    navController.navigateMainScreen(BottomScreen.Search, coroutineScope)
                 },
             title = "가수 또는 제목으로 검색",
             iconId = R.drawable.search
