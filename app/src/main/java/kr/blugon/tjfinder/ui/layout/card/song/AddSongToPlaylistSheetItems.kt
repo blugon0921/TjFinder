@@ -22,9 +22,6 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import kr.blugon.tjfinder.R
 import kr.blugon.tjfinder.module.*
-import kr.blugon.tjfinder.utils.api.TjFinderApi.addSongToPlaylist
-import kr.blugon.tjfinder.utils.api.TjFinderApi.playlists
-import kr.blugon.tjfinder.utils.api.TjFinderApi.removeSongFromPlaylist
 import kr.blugon.tjfinder.ui.layout.DoubleText
 import kr.blugon.tjfinder.ui.layout.PretendardText
 import kr.blugon.tjfinder.ui.layout.PretendardSpanStyle
@@ -33,6 +30,10 @@ import kr.blugon.tjfinder.ui.layout.card.playlist.ScrollingPlaylistTitle
 import kr.blugon.tjfinder.ui.theme.Pretendard
 import kr.blugon.tjfinder.ui.theme.ThemeColor
 import kr.blugon.tjfinder.utils.api.TjFinderApi
+import kr.blugon.tjfinder.utils.api.finder.PlaylistApi
+import kr.blugon.tjfinder.utils.api.finder.addSongToPlaylist
+import kr.blugon.tjfinder.utils.api.finder.playlists
+import kr.blugon.tjfinder.utils.api.finder.removeSongFromPlaylist
 
 @Composable
 fun AddSongToPlaylistSheetItems(
@@ -106,10 +107,10 @@ fun AddSongToPlaylistSheetItems(
                             }
                             if(isAdd) {
                                 val response = user.addSongToPlaylist(playlist, song.id)
-                                if(response != TjFinderApi.AddToPlaylistResponse.FAIL) successCount++
+                                if(response != PlaylistApi.AddToPlaylistResponse.FAIL) successCount++
                             } else {
                                 val response = user.removeSongFromPlaylist(playlist, song.id)
-                                if(response != TjFinderApi.RemoveFromPlaylistResponse.FAIL) successCount++
+                                if(response != PlaylistApi.RemoveFromPlaylistResponse.FAIL) successCount++
                             }
                         }
                         if(allCount == 0) return@launch
@@ -161,11 +162,11 @@ fun AddSongToPlaylistSheetItems(
                         DoubleText( //만든이#태그
                             modifier = Modifier.padding(start = 10.dp),
                             first = {
-                                it.text = playlist.creator
+                                it.text = playlist.owner.name
                                 it.style = PretendardSpanStyle(fontSize = 12f)
                             },
                             second = {
-                                it.text = "#${playlist.creatorTag}"
+                                it.text = "#${playlist.owner.tag}"
                                 it.style = PretendardSpanStyle(
                                     color = Color.Gray,
                                     fontSize = 8f

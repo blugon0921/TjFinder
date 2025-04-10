@@ -11,14 +11,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import kr.blugon.tjfinder.utils.api.TjFinderApi.playlists
 import kr.blugon.tjfinder.module.OtherUser
 import kr.blugon.tjfinder.module.User
-import kr.blugon.tjfinder.ui.layout.navigation.ChildScreen
 import kr.blugon.tjfinder.ui.layout.PretendardText
+import kr.blugon.tjfinder.ui.layout.navigation.ChildScreen
 import kr.blugon.tjfinder.ui.layout.navigation.navigateScreen
 import kr.blugon.tjfinder.ui.screen.child.user.InOtherUser
 import kr.blugon.tjfinder.ui.theme.ThemeColor
+import kr.blugon.tjfinder.utils.api.finder.playlists
 
 @Composable
 fun OtherUserCard(

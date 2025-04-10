@@ -45,9 +45,6 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
 import kr.blugon.tjfinder.R
 import kr.blugon.tjfinder.module.*
-import kr.blugon.tjfinder.utils.api.TjFinderApi.getPlaylist
-import kr.blugon.tjfinder.utils.api.TjFinderApi.memoList
-import kr.blugon.tjfinder.utils.api.TjFinderApi.searchPlaylist
 import kr.blugon.tjfinder.module.database.SongCacheDB
 import kr.blugon.tjfinder.module.database.SongManager
 import kr.blugon.tjfinder.module.search.SearchCategory
@@ -62,6 +59,9 @@ import kr.blugon.tjfinder.ui.layout.state.CenterText
 import kr.blugon.tjfinder.ui.theme.Pretendard
 import kr.blugon.tjfinder.ui.theme.ThemeColor
 import kr.blugon.tjfinder.utils.api.TjFinderApi
+import kr.blugon.tjfinder.utils.api.finder.getPlaylist
+import kr.blugon.tjfinder.utils.api.finder.memoList
+import kr.blugon.tjfinder.utils.api.finder.searchPlaylist
 import kr.blugon.tjfinder.utils.isApiServerOpened
 import kr.blugon.tjfinder.utils.isInternetAvailable
 import my.nanihadesuka.compose.LazyColumnScrollbar
@@ -166,10 +166,10 @@ fun Search(navController: NavController) {
         if(!isApiServerOpened || user == null) return
         states[SearchCategory.User] = SearchState.SEARCHING
         val users = ArrayList<OtherUser>()
-        users.addAll(TjFinderApi.searchUser(input, context))
+        users.addAll(TjFinderApi.User.search(input))
         val split = input.split("#")
         if(split.size == 2) {
-            val response = TjFinderApi.getUser(split.first(), split.last())
+            val response = TjFinderApi.User.get(split.first(), split.last())
             if(response != null) users.add(response)
         }
         if(users.isEmpty()) {
@@ -351,7 +351,7 @@ fun Search(navController: NavController) {
                         PlaylistSortType.SONG_COUNT -> results.playlist.sortBy { it.songIdList.size }
                         PlaylistSortType.TITLE -> results.playlist.sortBy { it.title }
                         PlaylistSortType.ID -> results.playlist.sortBy { it.id }
-                        PlaylistSortType.CREATOR -> results.playlist.sortBy { it.creator }
+                        PlaylistSortType.CREATOR -> results.playlist.sortBy { it.owner.name }
                     }
                 }
                 SearchCategory.User -> {}

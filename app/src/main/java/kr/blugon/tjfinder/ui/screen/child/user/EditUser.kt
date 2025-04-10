@@ -40,16 +40,11 @@ import kr.blugon.tjfinder.ui.theme.ThemeColor
 import kr.blugon.tjfinder.utils.api.FinderApi
 import kr.blugon.tjfinder.utils.api.FinderResponse
 import kr.blugon.tjfinder.utils.api.TjFinderApi
-import kr.blugon.tjfinder.utils.api.TjFinderApi.editDescription
-import kr.blugon.tjfinder.utils.api.TjFinderApi.editIsPrivate
-import kr.blugon.tjfinder.utils.api.TjFinderApi.editName
-import kr.blugon.tjfinder.utils.api.TjFinderApi.editProfileImage
-import kr.blugon.tjfinder.utils.api.TjFinderApi.playlists
+import kr.blugon.tjfinder.utils.api.finder.*
 import kr.blugon.tjfinder.utils.isInternetAvailable
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
-import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -89,7 +84,7 @@ fun EditUserScreen(navController: NavController) {
         defaultDescription = user!!.description
         description.value = defaultDescription
 
-        defaultProfileImage = user!!.photoUrl
+        defaultProfileImage = user!!.avatar
         profileImage.value = defaultProfileImage
 
         defaultIsPrivate = user!!.isPrivate
@@ -104,7 +99,7 @@ fun EditUserScreen(navController: NavController) {
 
     val retrofit = Retrofit
         .Builder()
-        .baseUrl("${TjFinderApi.URL}/")
+        .baseUrl("${TjFinderApi.RequestURL}/")
         .addConverterFactory(GsonConverterFactory.create())
         .build()
         .create(FinderApi::class.java)
@@ -151,7 +146,8 @@ fun EditUserScreen(navController: NavController) {
                             tint = Color.White
                         )
                     }
-                }
+                },
+                colors = TopAppBarDefaults.topAppBarColors().copy(containerColor = Color.Transparent)
             )
         },
         containerColor = Color.Transparent
@@ -243,7 +239,7 @@ fun EditUserScreen(navController: NavController) {
                             state = State.LOADING
                             val successCheck = listOf( //서버 업로드
                                 defaultProfileImage == profileImage.value ||
-                                user!!.editProfileImage(profileImage.value.ifBlank { defaultProfileImage }),
+                                user!!.editAvatar(profileImage.value.ifBlank { defaultProfileImage }),
 
                                 defaultName.trim() == name.value.trim() ||
                                 user!!.editName(name.value.ifBlank {

@@ -2,34 +2,53 @@ package kr.blugon.tjfinder.module
 
 import android.content.Context
 import kr.blugon.tjfinder.utils.api.TjFinderApi
+import org.json.JSONObject
 
-open class NoTagUser(
-    open val uid: String,
-    open val email: String,
-    open val name: String,
-    open val photoUrl: String,
+class UnregisteredUser(
+    val uid: String,
+    val email: String,
+    val name: String,
+    val photoUrl: String,
 )
 
 
 data class OtherUser(
     val name: String,
     val tag: String,
-    val photoUrl: String,
+    val avatar: String,
     val description: String,
-)
+) {
+    constructor(json: JSONObject) : this(
+        json.getString("name"),
+        json.getString("tag"),
+        json.getString("avatar"),
+        json.getString("description")
+    )
+}
 
 data class User(
-    override val uid: String,
-    override val email: String,
-    override val name: String,
+    val uid: String,
+    val email: String,
+    val name: String,
     val tag: String,
-    override val photoUrl: String,
+    val avatar: String,
     val description: String,
     val isPrivate: Boolean,
-): NoTagUser(uid, email, name, photoUrl) {
+) {
+    constructor(uid: String, json: JSONObject) : this(
+        uid,
+        json.getString("email"),
+        json.getString("name"),
+        json.getString("tag"),
+        json.getString("avatar"),
+        json.getString("description"),
+        json.getBoolean("isPrivate")
+    )
+
+
     companion object {
         suspend fun login(context: Context): User? {
-            return if(LoginManager.getSavedUid(context) != null) TjFinderApi.login(LoginManager.getSavedUid(context)!!)
+            return if(LoginManager.getSavedUid(context) != null) TjFinderApi.User.login(LoginManager.getSavedUid(context)!!)
             else null
         }
     }
@@ -38,7 +57,7 @@ data class User(
         return OtherUser(
             this.name,
             this.tag,
-            this.photoUrl,
+            this.avatar,
             this.description
         )
     }

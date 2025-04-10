@@ -113,14 +113,16 @@ fun SettingScreen(navController: NavController) {
                             tint = Color.White
                         )
                     }
-                }
+                },
+                colors = TopAppBarDefaults.topAppBarColors().copy(containerColor = Color.Transparent)
             )
-        }
+        },
+        containerColor = Color.Transparent
     ) {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center, //asdf <- 과거의 나는 무슨 생각으로 이런 메모를 남겼을까
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             items(SettingCategory.entries.size) { index ->
                 val category = SettingCategory.entries[index]

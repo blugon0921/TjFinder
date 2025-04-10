@@ -5,7 +5,6 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import fuel.httpGet
 import kr.blugon.tjfinder.utils.api.TjFinderApi
-import org.json.JSONObject
 
 fun isInternetAvailable(context: Context): Boolean {
     val result: Boolean
@@ -23,7 +22,7 @@ fun isInternetAvailable(context: Context): Boolean {
 
 suspend fun isApiServerOpened(): Boolean {
     return try {
-        val response = TjFinderApi.URL.httpGet()
+        val response = TjFinderApi.RequestURL.httpGet()
         response.statusCode == 200
     } catch (_: Exception) { false }
 }

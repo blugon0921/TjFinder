@@ -19,15 +19,15 @@ import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import kr.blugon.tjfinder.R
-import kr.blugon.tjfinder.utils.api.TjFinderApi.memoList
-import kr.blugon.tjfinder.utils.api.TjFinderApi.removeMemo
-import kr.blugon.tjfinder.utils.api.TjFinderApi.setMemo
 import kr.blugon.tjfinder.module.Song
 import kr.blugon.tjfinder.module.User
 import kr.blugon.tjfinder.module.memoList
 import kr.blugon.tjfinder.ui.layout.card.song.highLightColor
 import kr.blugon.tjfinder.ui.layout.card.song.splitHighlight
 import kr.blugon.tjfinder.ui.theme.Pretendard
+import kr.blugon.tjfinder.utils.api.finder.memoList
+import kr.blugon.tjfinder.utils.api.finder.removeMemo
+import kr.blugon.tjfinder.utils.api.finder.setMemo
 
 @Composable
 fun MemoLayout(

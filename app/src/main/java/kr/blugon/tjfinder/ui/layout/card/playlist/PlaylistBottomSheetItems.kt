@@ -7,12 +7,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.AnnotatedString
 import kotlinx.coroutines.launch
 import kr.blugon.tjfinder.R
-import kr.blugon.tjfinder.utils.api.TjFinderApi.addPlaylistToLibrary
-import kr.blugon.tjfinder.utils.api.TjFinderApi.isExistInLibrary
-import kr.blugon.tjfinder.utils.api.TjFinderApi.removePlaylistFromLibrary
 import kr.blugon.tjfinder.module.Playlist
 import kr.blugon.tjfinder.module.User
 import kr.blugon.tjfinder.ui.layout.BottomSheetItem
+import kr.blugon.tjfinder.utils.api.finder.addPlaylistToLibrary
+import kr.blugon.tjfinder.utils.api.finder.isExistInLibrary
+import kr.blugon.tjfinder.utils.api.finder.removePlaylistFromLibrary
 
 @Composable
 fun PlaylistBottomSheetItems(

@@ -9,14 +9,13 @@ import org.json.JSONObject
 import kotlin.concurrent.thread
 
 
-suspend fun JSONObject.toPlaylist(context: Context, detailSongData: Boolean = false): Playlist {
+suspend fun JSONObject.toPlaylist(context: Context? = null, detailSongData: Boolean = false): Playlist {
     val songListArray = this.getJSONArray("songList")
     val playlist = Playlist(
         this.getString("id"),
         this.getBoolean("isPrivate"),
         this.getString("title"),
-        this.getString("creator"),
-        this.getString("creatorTag"),
+        OtherUser(this.getJSONObject("owner")),
         this.getString("thumbnail"),
         null,
         listOf()
@@ -29,15 +28,14 @@ suspend fun JSONObject.toPlaylist(context: Context, detailSongData: Boolean = fa
     }
     return playlist.apply {
         this.songIdList = songIdList
-        if(detailSongData) this.loadSongList(context)
+        if(detailSongData && context != null) this.loadSongList(context)
     }
 }
 open class Playlist(
     open val id: String,
     open var isPrivate: Boolean,
     open val title: String,
-    open val creator: String,
-    open val creatorTag: String,
+    open val owner: OtherUser,
     open val thumbnail: String,
     open var songList: List<PlaylistSong>?,
     open var songIdList: List<Int>,
@@ -64,13 +62,12 @@ open class Playlist(
     override fun toString(): String {
         return """
             {
-                "id": $id,
+                "id": "$id",
                 "title": "$title",
-                "creator": "$creator",
-                "creatorTag": "$creatorTag",
+                "owner": "$owner",
                 "thumbnail": "$thumbnail",
                 "songList": $songList,
-                "songIdList": $songIdList
+                "songIdList": $songIdList,
                 "isPrivate": $isPrivate,
                 "isMine": $isMine
             }
@@ -78,15 +75,44 @@ open class Playlist(
     }
 }
 
+suspend fun JSONObject.toMyPlaylist(context: Context? = null, detailSongData: Boolean = false): MyPlaylist {
+    val songListArray = this.getJSONArray("songList")
+    val playlist = MyPlaylist(
+        this.getString("id"),
+        this.getBoolean("isPrivate"),
+        this.getString("title"),
+        OtherUser(this.getJSONObject("owner")),
+        this.getString("thumbnail"),
+        null,
+        listOf()
+    )
+    if(songListArray.length() == 0) return playlist //no in songs
+    val songIdList = ArrayList<Int>()
+    repeat(songListArray.length()) {
+        val id = songListArray.getInt(it)
+        songIdList.add(id)
+    }
+    return playlist.apply {
+        this.songIdList = songIdList
+        if(detailSongData && context != null) this.loadSongList(context)
+    }
+}
 class MyPlaylist(
     override val id: String,
     override var isPrivate: Boolean,
     override val title: String,
-    override val creator: String,
-    override val creatorTag: String,
+    override val owner : OtherUser,
     override val thumbnail: String,
     override var songList: List<PlaylistSong>?,
     override var songIdList: List<Int>,
-): Playlist(id, isPrivate, title, creator, creatorTag, thumbnail, songList, songIdList, true) {
-    constructor(playlist: Playlist) : this(playlist.id, playlist.isPrivate, playlist.title, playlist.creator, playlist.creatorTag, playlist.thumbnail, playlist.songList, playlist.songIdList)
+): Playlist(id, isPrivate, title, owner, thumbnail, songList, songIdList, true) {
+    constructor(playlist: Playlist) : this(
+        playlist.id,
+        playlist.isPrivate,
+        playlist.title,
+        playlist.owner,
+        playlist.thumbnail,
+        playlist.songList,
+        playlist.songIdList
+    )
 }

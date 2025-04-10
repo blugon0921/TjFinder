@@ -6,7 +6,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.*
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
@@ -21,16 +23,17 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import kr.blugon.tjfinder.R
-import kr.blugon.tjfinder.module.*
+import kr.blugon.tjfinder.module.SongType
 import kr.blugon.tjfinder.module.State
+import kr.blugon.tjfinder.module.Top100Song
 import kr.blugon.tjfinder.module.database.SongManager
-import kr.blugon.tjfinder.ui.layout.*
+import kr.blugon.tjfinder.ui.layout.Dropdown
+import kr.blugon.tjfinder.ui.layout.LoadingStateScreen
+import kr.blugon.tjfinder.ui.layout.TopBar
 import kr.blugon.tjfinder.ui.layout.card.song.Top100SongCard
 import kr.blugon.tjfinder.ui.layout.navigation.BottomScreen
 import kr.blugon.tjfinder.ui.layout.navigation.navigateMainScreen
-import kr.blugon.tjfinder.ui.layout.navigation.navigateScreen
 import kr.blugon.tjfinder.ui.theme.ThemeColor
-import kr.blugon.tjfinder.utils.api.TjFinderApi.loadMemoList
 import kr.blugon.tjfinder.utils.isInternetAvailable
 import my.nanihadesuka.compose.LazyColumnScrollbar
 import kotlin.concurrent.thread
@@ -55,7 +58,6 @@ fun Home(navController: NavController) {
             state = State.NOT_INTERNET_AVAILABLE
             return@LaunchedEffect
         }
-        User.login(context)?.loadMemoList()
         if (top100.isEmpty()) {
             if (songs[songType] != null) {
                 top100.addAll(songs[songType]!!)

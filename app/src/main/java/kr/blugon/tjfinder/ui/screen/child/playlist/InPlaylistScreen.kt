@@ -71,7 +71,7 @@ fun InPlaylistScreen(navController: NavController) {
             return@LaunchedEffect
         }
         if(LoginManager.getSavedUid(context) != null) {
-            user = TjFinderApi.login(LoginManager.getSavedUid(context)!!)
+            user = TjFinderApi.User.login(LoginManager.getSavedUid(context)!!)
             state = State.LOADING
             playlist.loadSongList(context)
             coroutineScope.launch {
@@ -306,11 +306,11 @@ private fun PlaylistInfoCard(playlist: Playlist) {
                 )
                 DoubleText(
                     first = { //플레이리스트 만든이
-                        it.text = playlist.creator
+                        it.text = playlist.owner.name
                         it.style = PretendardSpanStyle(fontSize = 13f)
                     },
                     second = { //플레이리스트 만든이 tag
-                        it.text = "#${playlist.creatorTag}"
+                        it.text = "#${playlist.owner.tag}"
                         it.style = PretendardSpanStyle(
                             color = Color.Gray,
                             fontSize = 8f

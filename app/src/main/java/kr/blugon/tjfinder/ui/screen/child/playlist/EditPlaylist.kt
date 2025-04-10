@@ -1,5 +1,6 @@
 package kr.blugon.tjfinder.ui.screen.child.playlist
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.net.Uri
 import android.os.Environment
@@ -34,7 +35,6 @@ import kr.blugon.tjfinder.module.MyPlaylist
 import kr.blugon.tjfinder.module.State
 import kr.blugon.tjfinder.module.User
 import kr.blugon.tjfinder.ui.layout.PretendardText
-import kr.blugon.tjfinder.ui.layout.card.playlist.PlaylistThumbnail
 import kr.blugon.tjfinder.ui.layout.state.Loading
 import kr.blugon.tjfinder.ui.layout.state.NotConnectedNetwork
 import kr.blugon.tjfinder.ui.screen.child.EditTextField
@@ -43,9 +43,9 @@ import kr.blugon.tjfinder.ui.theme.ThemeColor
 import kr.blugon.tjfinder.utils.api.FinderApi
 import kr.blugon.tjfinder.utils.api.FinderResponse
 import kr.blugon.tjfinder.utils.api.TjFinderApi
-import kr.blugon.tjfinder.utils.api.TjFinderApi.editThumbnailOfPlaylist
-import kr.blugon.tjfinder.utils.api.TjFinderApi.editTitleOfPlaylist
-import kr.blugon.tjfinder.utils.api.TjFinderApi.playlists
+import kr.blugon.tjfinder.utils.api.finder.editThumbnailOfPlaylist
+import kr.blugon.tjfinder.utils.api.finder.editTitleOfPlaylist
+import kr.blugon.tjfinder.utils.api.finder.playlists
 import kr.blugon.tjfinder.utils.isInternetAvailable
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -91,7 +91,7 @@ fun EditPlaylistScreen(navController: NavController) {
 
     val retrofit = Retrofit
         .Builder()
-        .baseUrl("${TjFinderApi.URL}/")
+        .baseUrl("${TjFinderApi.RequestURL}/")
         .addConverterFactory(GsonConverterFactory.create())
         .build()
         .create(FinderApi::class.java)
@@ -245,6 +245,7 @@ object FileUtil {
     }
 
     // 파일 내용 스트림 복사
+    @SuppressLint("Recycle")
     fun copyToFile(context: Context, uri: Uri, file: File) {
         val inputStream = context.contentResolver.openInputStream(uri)
         val outputStream = FileOutputStream(file)

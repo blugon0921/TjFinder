@@ -65,10 +65,10 @@ class PlaylistSong(
         return """
             {
                 "id": $id,
-                "title": "$title",
-                "singer": "$singer",
-                "lyricist": "$lyricist",
-                "composer": "$composer",
+                "title": "${title.replace("\\\"", "\\\\\"")}",
+                "singer": "${singer.replace("\\\"", "\\\\\"")}",
+                "lyricist": "${lyricist?.replace("\\\"", "\\\\\"")}",
+                "composer": "${composer?.replace("\\\"", "\\\\\"")}",
                 "isMR": $isMR,
                 "playlistId": "${playlist.id}"
             }

@@ -1,6 +1,8 @@
 package kr.blugon.tjfinder.ui.screen
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -14,15 +16,16 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import kr.blugon.tjfinder.R
-import kr.blugon.tjfinder.module.*
-import kr.blugon.tjfinder.utils.api.TjFinderApi.searchPlaylist
+import kr.blugon.tjfinder.module.Playlist
+import kr.blugon.tjfinder.module.PlaylistSortType
 import kr.blugon.tjfinder.module.State
-import kr.blugon.tjfinder.ui.layout.*
+import kr.blugon.tjfinder.module.User
+import kr.blugon.tjfinder.ui.layout.LoadingStateScreen
+import kr.blugon.tjfinder.ui.layout.SortableTopBar
 import kr.blugon.tjfinder.ui.layout.card.playlist.PlaylistCard
-import kr.blugon.tjfinder.ui.layout.navigation.DefaultScreen
-import kr.blugon.tjfinder.ui.layout.navigation.navigateScreen
 import kr.blugon.tjfinder.ui.layout.state.CenterText
 import kr.blugon.tjfinder.ui.theme.ThemeColor
+import kr.blugon.tjfinder.utils.api.finder.searchPlaylist
 import kr.blugon.tjfinder.utils.isApiServerOpened
 import kr.blugon.tjfinder.utils.isInternetAvailable
 import my.nanihadesuka.compose.LazyColumnScrollbar
@@ -84,7 +87,7 @@ fun PlaylistHome(navController: NavController) {
                     PlaylistSortType.SONG_COUNT -> playlists.sortBy { it.songIdList.size }
                     PlaylistSortType.TITLE -> playlists.sortBy { it.title }
                     PlaylistSortType.ID -> playlists.sortBy { it.id }
-                    PlaylistSortType.CREATOR -> playlists.sortBy { it.creator }
+                    PlaylistSortType.CREATOR -> playlists.sortBy { it.owner.name }
                 }
                 state = State.SUCCESS
             }
@@ -106,7 +109,7 @@ fun PlaylistHome(navController: NavController) {
                 PlaylistSortType.SONG_COUNT -> playlists.sortBy { it.songIdList.size }
                 PlaylistSortType.TITLE -> playlists.sortBy { it.title }
                 PlaylistSortType.ID -> playlists.sortBy { it.id }
-                PlaylistSortType.CREATOR -> playlists.sortBy { it.creator }
+                PlaylistSortType.CREATOR -> playlists.sortBy { it.owner.name }
             }
         }
 

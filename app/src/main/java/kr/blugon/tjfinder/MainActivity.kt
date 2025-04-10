@@ -22,7 +22,6 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.google.firebase.FirebaseApp
 import kotlinx.coroutines.launch
 import kr.blugon.tjfinder.module.LoginManager
-import kr.blugon.tjfinder.utils.api.TjFinderApi.loadMemoList
 import kr.blugon.tjfinder.module.User
 import kr.blugon.tjfinder.module.database.NewCacheDB
 import kr.blugon.tjfinder.module.database.PopularCacheDB
@@ -34,6 +33,7 @@ import kr.blugon.tjfinder.ui.theme.Pretendard
 import kr.blugon.tjfinder.ui.theme.ThemeColor
 import kr.blugon.tjfinder.ui.theme.TjFinderTheme
 import kr.blugon.tjfinder.utils.*
+import kr.blugon.tjfinder.utils.api.finder.memoList
 
 
 class MainActivity : ComponentActivity() {
@@ -57,7 +57,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-const val VERSION = "Beta 1.7.2"
+const val VERSION = "Beta 1.7.3"
 @Composable
 fun Greeting(mainActivity: MainActivity) {
     val context = LocalContext.current
@@ -79,7 +79,7 @@ fun Greeting(mainActivity: MainActivity) {
         }
         if(!isApiServerOpened()) return@LaunchedEffect
         val user = User.login(context)?: return@LaunchedEffect
-        user.loadMemoList()
+        user.memoList()
     }
 
     if(!isLatestVersion) {

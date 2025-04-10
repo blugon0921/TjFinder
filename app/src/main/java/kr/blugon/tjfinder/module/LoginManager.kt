@@ -26,14 +26,14 @@ object LoginManager {
         return sharedPreferences.getString(KEY_UID, null)
     }
 
-    fun login(activityResult: ActivityResult, onSuccess: (AuthResult, NoTagUser) -> Unit, onException: (Task<AuthResult>?, Exception?) -> Unit = { task, exception -> }) {
+    fun login(activityResult: ActivityResult, onSuccess: (AuthResult, UnregisteredUser) -> Unit, onException: (Task<AuthResult>?, Exception?) -> Unit = { task, exception -> }) {
         try {
             val account = GoogleSignIn.getSignedInAccountFromIntent(activityResult.data).getResult(ApiException::class.java)
             val credential = GoogleAuthProvider.getCredential(account.idToken, null)
             FirebaseAuth.getInstance().signInWithCredential(credential).addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     val result = task.result
-                    onSuccess(result, NoTagUser(
+                    onSuccess(result, UnregisteredUser(
                         result.user!!.uid,
                         result.user!!.email!!,
                         result.user!!.displayName!!,

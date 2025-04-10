@@ -29,15 +29,13 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kr.blugon.tjfinder.R
-import kr.blugon.tjfinder.utils.api.TjFinderApi
 import kr.blugon.tjfinder.module.LoginManager
 import kr.blugon.tjfinder.module.User
 import kr.blugon.tjfinder.ui.layout.navigation.BottomScreen
 import kr.blugon.tjfinder.ui.layout.navigation.navigateMainScreen
-import kr.blugon.tjfinder.ui.layout.navigation.navigateScreen
 import kr.blugon.tjfinder.ui.theme.Pretendard
 import kr.blugon.tjfinder.ui.theme.ThemeColor
-import kr.blugon.tjfinder.utils.api.TjFinderApi.loadMemoList
+import kr.blugon.tjfinder.utils.api.TjFinderApi
 
 @Composable
 fun LoginScreen(navController: NavController) {
@@ -51,7 +49,7 @@ fun LoginScreen(navController: NavController) {
     ) {
         if(isLogin) {
             coroutineScope.launch {
-                user = TjFinderApi.login(LoginManager.getSavedUid(context)!!)
+                user = TjFinderApi.User.login(LoginManager.getSavedUid(context)!!)
             }
             return@rememberLauncherForActivityResult
         }
@@ -59,7 +57,7 @@ fun LoginScreen(navController: NavController) {
             isLogin = true
             Log.d("TjFinder", "Login to ${profileUser.name}")
             coroutineScope.launch(Dispatchers.IO) {
-                user = TjFinderApi.registerUser(profileUser.uid, profileUser.email, profileUser.name, profileUser.photoUrl)
+                user = TjFinderApi.User.register(profileUser.uid, profileUser.email, profileUser.name, profileUser.photoUrl)
             }
             if(LoginManager.getSavedUid(context) == null) LoginManager.saveLoginInfo(context, profileUser.uid)
         }) { task,exception -> //onException

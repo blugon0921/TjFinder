@@ -15,15 +15,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import kr.blugon.tjfinder.utils.api.TjFinderApi.getPlaylist
 import kr.blugon.tjfinder.module.Playlist
 import kr.blugon.tjfinder.module.User
 import kr.blugon.tjfinder.ui.layout.*
-import kr.blugon.tjfinder.ui.layout.BottomSheet
 import kr.blugon.tjfinder.ui.layout.navigation.ChildScreen
 import kr.blugon.tjfinder.ui.layout.navigation.navigateScreen
 import kr.blugon.tjfinder.ui.screen.child.playlist.InPlaylist
 import kr.blugon.tjfinder.ui.theme.ThemeColor
+import kr.blugon.tjfinder.utils.api.finder.getPlaylist
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -43,7 +42,7 @@ fun PlaylistCard(
     var isMine by remember { mutableStateOf(playlist.isMine) }
     LaunchedEffect(Unit) {
         user = User.login(context)?: return@LaunchedEffect
-        isMine = (playlist.creator == user?.name) && (playlist.creatorTag == user?.tag)
+        isMine = (playlist.owner.name == user?.name) && (playlist.owner.tag == user?.tag)
         isPrivate = user!!.getPlaylist(playlist.id, context)?.isPrivate?: false
     }
 
@@ -86,11 +85,11 @@ fun PlaylistCard(
             DoubleText( //만든이#태그
                 modifier = Modifier.padding(start = 10.dp),
                 first = {
-                    it.text = playlist.creator
+                    it.text = playlist.owner.name
                     it.style = PretendardSpanStyle(fontSize = 14f)
                 },
                 second = {
-                    it.text = "#${playlist.creatorTag}"
+                    it.text = "#${playlist.owner.tag}"
                     it.style = PretendardSpanStyle(
                         color = Color.Gray,
                         fontSize = 10f
@@ -145,11 +144,11 @@ fun PlaylistCard(
                         )
                         DoubleText(
                             first = { //플레이리스트 만든이
-                                it.text = playlist.creator
+                                it.text = playlist.owner.name
                                 it.style = PretendardSpanStyle(fontSize = 13f)
                             },
                             second = { //플레이리스트 만든이 tag
-                                it.text = "#${playlist.creatorTag}"
+                                it.text = "#${playlist.owner.tag}"
                                 it.style = PretendardSpanStyle(
                                     color = Color.Gray,
                                     fontSize = 10f

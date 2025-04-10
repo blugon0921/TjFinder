@@ -37,9 +37,9 @@ import kr.blugon.tjfinder.ui.theme.ThemeColor
 import kr.blugon.tjfinder.utils.api.FinderApi
 import kr.blugon.tjfinder.utils.api.FinderResponse
 import kr.blugon.tjfinder.utils.api.TjFinderApi
-import kr.blugon.tjfinder.utils.api.TjFinderApi.createPlaylist
-import kr.blugon.tjfinder.utils.api.TjFinderApi.editThumbnailOfPlaylist
-import kr.blugon.tjfinder.utils.api.TjFinderApi.playlists
+import kr.blugon.tjfinder.utils.api.finder.createPlaylist
+import kr.blugon.tjfinder.utils.api.finder.editThumbnailOfPlaylist
+import kr.blugon.tjfinder.utils.api.finder.playlists
 import kr.blugon.tjfinder.utils.isInternetAvailable
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -85,7 +85,7 @@ fun CreatePlaylist(navController: NavController) {
 
     val retrofit = Retrofit
         .Builder()
-        .baseUrl("${TjFinderApi.URL}/")
+        .baseUrl("${TjFinderApi.RequestURL}/")
         .addConverterFactory(GsonConverterFactory.create())
         .build()
         .create(FinderApi::class.java)

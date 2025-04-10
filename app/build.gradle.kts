@@ -12,8 +12,8 @@ android {
         applicationId = "kr.blugon.tjfinder"
         minSdk = 28
         targetSdk = 34
-        versionCode = 20
-        versionName = "beta_v1.7.2"
+        versionCode = 21
+        versionName = "beta_v1.7.3"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {

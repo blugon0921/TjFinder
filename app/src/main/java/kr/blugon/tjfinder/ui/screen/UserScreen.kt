@@ -50,7 +50,7 @@ fun UserScreen(navController: NavController) {
         isApiServerOpened = isApiServerOpened()
         if(!isInternetAvailable(context) || !isApiServerOpened) return@LaunchedEffect
         if(LoginManager.getSavedUid(context) != null) {
-            user = TjFinderApi.login(LoginManager.getSavedUid(context)?: return@LaunchedEffect)
+            user = TjFinderApi.User.login(LoginManager.getSavedUid(context)?: return@LaunchedEffect)
         }
     }
 

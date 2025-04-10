@@ -10,19 +10,19 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
 import kotlinx.coroutines.launch
 import kr.blugon.tjfinder.R
-import kr.blugon.tjfinder.utils.api.TjFinderApi
-import kr.blugon.tjfinder.utils.api.TjFinderApi.removeSongFromPlaylist
 import kr.blugon.tjfinder.module.PlaylistSong
 import kr.blugon.tjfinder.module.Song
 import kr.blugon.tjfinder.module.User
 import kr.blugon.tjfinder.module.search.SearchInfo
-import kr.blugon.tjfinder.ui.layout.navigation.BottomScreen
 import kr.blugon.tjfinder.ui.layout.BottomSheetItem
+import kr.blugon.tjfinder.ui.layout.navigation.BottomScreen
 import kr.blugon.tjfinder.ui.layout.navigation.ChildScreen
 import kr.blugon.tjfinder.ui.layout.navigation.navigateMainScreen
 import kr.blugon.tjfinder.ui.layout.navigation.navigateScreen
 import kr.blugon.tjfinder.ui.screen.child.playlist.InPlaylist
 import kr.blugon.tjfinder.ui.screen.initValue
+import kr.blugon.tjfinder.utils.api.finder.PlaylistApi
+import kr.blugon.tjfinder.utils.api.finder.removeSongFromPlaylist
 
 @Composable
 fun SongBottomItems(
@@ -51,8 +51,8 @@ fun SongBottomItems(
                         coroutineScope.launch {
                             val response = user.removeSongFromPlaylist(song.playlist.toMine(), song.id)
                             when(response) {
-                                TjFinderApi.RemoveFromPlaylistResponse.SUCCESS -> Toast.makeText(context, "플레이리스트에서 곡을 제거했습니다", Toast.LENGTH_SHORT).show()
-                                TjFinderApi.RemoveFromPlaylistResponse.FAIL -> Toast.makeText(context, "플레이리스트에서 곡을 제거하는데 실패했습니다", Toast.LENGTH_SHORT).show()
+                                PlaylistApi.RemoveFromPlaylistResponse.SUCCESS -> Toast.makeText(context, "플레이리스트에서 곡을 제거했습니다", Toast.LENGTH_SHORT).show()
+                                PlaylistApi.RemoveFromPlaylistResponse.FAIL -> Toast.makeText(context, "플레이리스트에서 곡을 제거하는데 실패했습니다", Toast.LENGTH_SHORT).show()
                             }
                         }
                         InPlaylist.playlist = song.playlist

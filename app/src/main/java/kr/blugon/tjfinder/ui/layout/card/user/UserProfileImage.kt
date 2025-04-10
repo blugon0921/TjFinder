@@ -30,7 +30,7 @@ fun UserProfileImage(modifier: Modifier = Modifier, user: OtherUser, size: Dp = 
                 .clip(CircleShape)
                 .border(2.dp, Color(255, 255, 255, 64), CircleShape),
             model = ImageRequest.Builder(context)
-                .data(Uri.parse(user.photoUrl))
+                .data(Uri.parse(user.avatar))
                 .build(),
             contentDescription = "profile",
             contentScale = ContentScale.Crop,

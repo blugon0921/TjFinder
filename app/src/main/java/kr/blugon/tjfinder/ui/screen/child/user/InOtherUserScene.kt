@@ -13,9 +13,10 @@ import androidx.navigation.NavController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
-import kr.blugon.tjfinder.module.*
-import kr.blugon.tjfinder.utils.api.TjFinderApi.playlists
+import kr.blugon.tjfinder.module.OtherUser
+import kr.blugon.tjfinder.module.Playlist
 import kr.blugon.tjfinder.module.State
+import kr.blugon.tjfinder.module.User
 import kr.blugon.tjfinder.ui.layout.LoadingStateScreen
 import kr.blugon.tjfinder.ui.layout.PretendardText
 import kr.blugon.tjfinder.ui.layout.card.playlist.PlaylistCard
@@ -24,6 +25,7 @@ import kr.blugon.tjfinder.ui.layout.card.user.UserName
 import kr.blugon.tjfinder.ui.layout.card.user.UserProfileImage
 import kr.blugon.tjfinder.ui.screen.child.user.InOtherUser.otherUser
 import kr.blugon.tjfinder.ui.theme.ThemeColor
+import kr.blugon.tjfinder.utils.api.finder.playlists
 import kr.blugon.tjfinder.utils.isInternetAvailable
 
 
@@ -100,7 +102,7 @@ fun InOtherUserScreen(navController: NavController) {
                 Box(modifier = Modifier.fillMaxWidth().height(3.dp).background(ThemeColor.Gray)) //구분선
             }
         }
-        LoadingStateScreen(state, fail = {}) {
+        LoadingStateScreen(state, fail = {}, loadingMessage = "플레이리스트 로딩중") {
             if(playlists.isEmpty()) {
                 items(1) {
                     Column (
