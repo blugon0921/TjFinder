@@ -8,6 +8,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -103,15 +104,8 @@ fun SongCard(
                     PretendardText(text = song.singer, fontSize = 13f) //가수
                     Row {
                         PretendardText(text = song.title, fontSize = 20f) //제목
-                        if(song.isMR) {
-                            PretendardText(
-                                modifier = Modifier.width(45.dp).padding(start = 7.dp).clip(RoundedCornerShape(5.dp)).background(Color(0xFFff4a01)),
-                                text = "MR",
-                                fontWeight = FontWeight.SemiBold,
-                                fontSize = 18f,
-                                textAlign = TextAlign.Center
-                            )
-                        }
+                        if(song.isMR) MRIcon()
+                        if(song.isMV) MVIcon()
                     }
                 }
             },
@@ -126,7 +120,7 @@ fun SongCard(
 
 @Composable
 fun Top100SongCard(song: Top100Song, isFirst: Boolean = false, isLast: Boolean = false, navController: NavController) {
-    SongCard(song, isFirst, isLast, "#${song.top}", navController = navController)
+    SongCard(song, isFirst, isLast, "#${song.rank}", navController = navController)
 }
 
 @Composable

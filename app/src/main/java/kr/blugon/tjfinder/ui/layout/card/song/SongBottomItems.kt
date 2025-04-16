@@ -65,10 +65,10 @@ fun SongBottomItems(
                 initValue = SearchInfo(song.singer)
                 navController.navigateMainScreen(BottomScreen.Search, coroutineScope)
             }
-            BottomSheetItem(iconId = R.drawable.file, iconDescription = "lyrics", text = "가사") {
-                showLyrics.value = true
-                showBottomSheet.value = false
-            }
+//            BottomSheetItem(iconId = R.drawable.file, iconDescription = "lyrics", text = "가사") {
+//                showLyrics.value = true
+//                showBottomSheet.value = false
+//            }
         }
     }
 

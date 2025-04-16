@@ -36,7 +36,7 @@ fun TopBar(
     ) {
         Row( //애들 양쪽으로 밀기
             modifier = Modifier
-                .fillMaxWidth(0.875f),
+                .fillMaxWidth(0.87f),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
@@ -88,8 +88,7 @@ fun <T: SortType> SortableTopBar(
             ),
         ) {
             Icon(
-                modifier = Modifier
-                    .size(24.dp),
+                modifier = Modifier.size(24.dp),
                 imageVector = ImageVector.vectorResource(R.drawable.sort),
                 contentDescription = "sort",
                 tint = Color.White

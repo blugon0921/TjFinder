@@ -1,8 +1,11 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
-//    id("com.google.gms.google-services")
+    alias(libs.plugins.compose.compiler)
+    id("com.google.gms.google-services")
+//    id("com.google.devtools.ksp")
 }
+//apply(plugin = "com.google.gms.google-services")
 
 android {
     namespace = "kr.blugon.tjfinder"
@@ -10,10 +13,10 @@ android {
 
     defaultConfig {
         applicationId = "kr.blugon.tjfinder"
-        minSdk = 28
+        minSdk = 33
         targetSdk = 34
-        versionCode = 21
-        versionName = "beta_v1.7.3"
+        versionCode = 22
+        versionName = "beta_v1.7.4"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -89,14 +92,11 @@ dependencies {
 //    implementation("com.google.android.gms:play-services-ads:23.1.0")
 
     implementation(libs.sqlite)
-//    implementation(libs.sqliteBundled)
 
-    implementation(libs.room)
 //    implementation(libs.roomRuntime)
-//    implementation(libs.roomCompiler)
+//    ksp(libs.roomCompiler)
+//    implementation(libs.roomKtx)
 
     implementation(libs.jsoup)
     implementation(libs.kuromoji)
 }
-
-apply(plugin = "com.google.gms.google-services")

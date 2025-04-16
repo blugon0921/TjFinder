@@ -1,5 +1,5 @@
 [versions]
-kotlin = "1.9.22"
+kotlin = "2.1.20"
 android = "8.2.2"
 google_services = "4.4.2"
 #lib
@@ -36,9 +36,9 @@ kuromoji = "latest.release"
 
 [plugins]
 kotlin = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 android = { id = "com.android.application", version.ref = "android" }
 googleServices = { id = "com.google.gms.google-services", version.ref = "google_services" }
-
 
 [libraries]
 coreKtx = { module = "androidx.core:core-ktx", version.ref = "coreKtx" }
@@ -75,11 +75,10 @@ gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 moshi = { module = "com.squareup.moshi:moshi", version.ref = "moshi" }
 
 sqlite = { module = "androidx.sqlite:sqlite", version.ref = "sqlite"}
-sqliteBundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "sqlite" }
 
-room = { module = "androidx.room:room-gradle-plugin", version.ref = "room" }
-roomCompiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 roomRuntime = { module = "androidx.room:room-runtime", version.ref = "room" }
+roomCompiler = { module = "androidx.room:room-compiler", version.ref = "room" }
+roomKtx = { module = "androidx.room:room-ktx", version.ref = "room" }
 
 jsoup = { module = "org.jsoup:jsoup", version.ref = "jsoup" }
 kuromoji = { module = "com.atilika.kuromoji:kuromoji-ipadic", version.ref = "kuromoji" }

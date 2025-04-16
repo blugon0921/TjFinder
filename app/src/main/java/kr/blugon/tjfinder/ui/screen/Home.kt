@@ -23,7 +23,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import kr.blugon.tjfinder.R
-import kr.blugon.tjfinder.module.SongType
+import kr.blugon.tjfinder.module.Top100Type
 import kr.blugon.tjfinder.module.State
 import kr.blugon.tjfinder.module.Top100Song
 import kr.blugon.tjfinder.module.database.SongManager
@@ -39,8 +39,8 @@ import my.nanihadesuka.compose.LazyColumnScrollbar
 import kotlin.concurrent.thread
 
 
-private val songs = mutableMapOf<SongType, SnapshotStateList<Top100Song>>()
-private var songType by mutableStateOf(SongType.K_POP)
+private val songs = mutableMapOf<Top100Type, SnapshotStateList<Top100Song>>()
+private var songType by mutableStateOf(Top100Type.K_POP)
 private lateinit var listState: LazyListState
 
 private val top100 = mutableStateListOf<Top100Song>()
@@ -64,11 +64,11 @@ fun Home(navController: NavController) {
                 return@LaunchedEffect
             }
             state = State.LOADING
-            thread {
+            coroutineScope.launch {
                 val data = SongManager.monthPopular(songType, context)
                 if (data.isEmpty()) {
                     state = State.FAIL
-                    return@thread
+                    return@launch
                 }
                 top100.addAll(data)
                 songs[songType] = mutableStateListOf<Top100Song>().apply { addAll(data) }
@@ -110,8 +110,8 @@ fun Home(navController: NavController) {
                 )
                 Dropdown(
                     isExpanded = songTypeExpanded,
-                    items = ArrayList<Pair<String, SongType>>().apply {
-                        SongType.entries.forEach { entry ->
+                    items = ArrayList<Pair<String, Top100Type>>().apply {
+                        Top100Type.entries.forEach { entry ->
                             add(entry.displayName to entry)
                         }
                     }

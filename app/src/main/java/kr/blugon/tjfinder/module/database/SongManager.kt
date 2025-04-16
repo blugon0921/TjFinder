@@ -1,16 +1,20 @@
+@file:SuppressLint("Range")
 package kr.blugon.tjfinder.module.database
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.database.Cursor
+import androidx.core.database.getStringOrNull
 import kr.blugon.tjfinder.module.*
 import kr.blugon.tjfinder.utils.api.StringType
 import kr.blugon.tjfinder.utils.api.TJApi
 import java.time.LocalDateTime
 
-private val keys = mapOf(
-    SongType.K_POP to "kpop",
-    SongType.POP to "pop",
-    SongType.J_POP to "jpop"
-)
+fun Cursor.getInt(columnName: String) = getInt(getColumnIndex(columnName))
+fun Cursor.getString(columnName: String): String = getString(getColumnIndex(columnName))
+fun Cursor.getStringOrNull(columnName: String) = getStringOrNull(getColumnIndex(columnName))
+fun Cursor.getBoolean(columnName: String) = getInt(getColumnIndex(columnName)) == 1
+
 object SongManager {
     private const val PREF_NAME = "updateAt"
 
@@ -26,9 +30,9 @@ object SongManager {
     fun searchWithTitle(title: String, db: SongCacheDB, match: Boolean = false): List<Song> = TJApi.searchWithTitle(title, match).also { db.addAll(it) }
     fun searchWithSinger(singer: String, db: SongCacheDB, match: Boolean = false): List<Song> = TJApi.searchWithSinger(singer, match).also { db.addAll(it) }
 
-    fun monthPopular(type: SongType = SongType.K_POP, context: Context): List<Top100Song> {
-        val lastUpdate = getUpdateAt(context, keys[type]!!)
-        val popularCacheDB = PopularCacheDB(context)
+    suspend fun monthPopular(type: Top100Type = Top100Type.K_POP, context: Context): List<Top100Song> {
+        val lastUpdate = getUpdateAt(context, type.name)
+        val popularCacheDB = Top100CacheDB(context)
 
         if(lastUpdate != null && LocalDateTime.now().dayOfYear == lastUpdate) {
             val cache = popularCacheDB[type]
@@ -39,12 +43,12 @@ object SongManager {
         TJApi.monthPopular(type).also {
             cacheDB.addAll(it)
             popularCacheDB[type] = it
-            saveUpdateAt(context, keys[type]!!)
+            saveUpdateAt(context, type.name)
             return it
         }
     }
 
-    fun monthNew(context: Context): List<Song> {
+    suspend fun monthNew(context: Context): List<Song> {
         val lastUpdate = getUpdateAt(context, "new_month")
         val newCacheDB = NewCacheDB(context)
 

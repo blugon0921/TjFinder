@@ -7,47 +7,53 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteException
 import android.database.sqlite.SQLiteOpenHelper
 import kr.blugon.tjfinder.module.Song
+import kr.blugon.tjfinder.module.Top100Song
+import kr.blugon.tjfinder.module.Top100Type
 
-private const val DATABASE_NAME = "monthNew"
-class NewCacheDB(
+class Top100CacheDB(
     val context: Context?
 ): SQLiteOpenHelper(context, "cache", null, 1) {
 
     override fun onCreate(db: SQLiteDatabase) = createTable(db)
     private fun createTable(db: SQLiteDatabase) {
-        db.execSQL("""
-            CREATE TABLE IF NOT EXISTS $DATABASE_NAME (
-                id INTEGER PRIMARY KEY,
-                title TEXT,
-                singer TEXT,
-                lyricist TEXT,
-                composer TEXT,
-                isMR INTEGER,
-                isMV INTEGER,
-                albumArtUrl TEXT
-            );
-        """.trimIndent())
+        Top100Type.entries.forEach { t ->
+            db.execSQL("""
+                CREATE TABLE IF NOT EXISTS ${t.name} (
+                    rank INTEGER PRIMARY KEY,
+                    id INTEGER,
+                    title TEXT,
+                    singer TEXT,
+                    lyricist TEXT,
+                    composer TEXT,
+                    isMR INTEGER,
+                    isMV INTEGER,
+                    albumArtUrl TEXT
+                );
+            """.trimIndent())
+        }
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        db.execSQL("DROP TABLE IF EXISTS $DATABASE_NAME")
+        Top100Type.entries.forEach { t ->
+            db.execSQL("DROP TABLE IF EXISTS ${t.name}")
+        }
         onCreate(db)
     }
 
     fun clear() {
         val db = writableDatabase
-        db.execSQL("DROP TABLE IF EXISTS $DATABASE_NAME")
+        Top100Type.entries.forEach { db.execSQL("DROP TABLE IF EXISTS ${it.name}") }
         onCreate(db)
         db.close()
     }
 
     @SuppressLint("Range")
-    fun get(): List<Song> {
-        val songs = ArrayList<Song>()
+    operator fun get(type: Top100Type): List<Top100Song> {
+        val songs = ArrayList<Top100Song>()
         val db = this.readableDatabase
 
         val cursor = try {
-            db.rawQuery("SELECT * FROM $DATABASE_NAME", null)
+            db.rawQuery("SELECT * FROM ${type.name}", null)
         } catch (_: SQLiteException) {
             createTable(db)
             return listOf()
@@ -55,20 +61,25 @@ class NewCacheDB(
 
         if(cursor.moveToFirst()) {
             do {
-                songs.add(Song(cursor))
+                songs.add(Top100Song(
+                    type = type,
+                    rank = cursor.getInt("rank"),
+                    song = Song(cursor),
+                ))
             } while (cursor.moveToNext())
         }
         db.close()
-        return songs
+        return songs.sortedBy { it.rank }
     }
 
-    fun set(songs: List<Song>) {
+    operator fun set(type: Top100Type, songs: List<Top100Song>) {
         val db = this.writableDatabase
         try {
-            db.execSQL("DELETE FROM $DATABASE_NAME")
+            db.execSQL("DELETE FROM ${type.name}")
         } catch (_: SQLiteException) { createTable(db) }
         songs.forEach {
-            db.insert(DATABASE_NAME, null, ContentValues().apply {
+            db.insert(type.name, null, ContentValues().apply {
+                put("rank", it.rank)
                 put("id", it.id)
                 put("title", it.title)
                 put("singer", it.singer)

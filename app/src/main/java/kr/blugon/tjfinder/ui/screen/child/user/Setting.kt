@@ -26,11 +26,11 @@ import kr.blugon.tjfinder.ui.layout.card.SettingItem
 
 class SettingCategory(val name: String, val code: String) {
     companion object {
-        val Lyrics = SettingCategory("가사", "Lyrics")
+//        val Lyrics = SettingCategory("가사", "Lyrics")
         val TestFunction = SettingCategory("실험적 기능", "TestFunction")
         val Etc = SettingCategory("기타", "Etc")
         val entries = listOf(
-            Lyrics,
+//            Lyrics,
             TestFunction,
             Etc
         )
@@ -45,20 +45,20 @@ class SettingType <T> (
     val defaultValue: T
 ) {
     companion object {
-        val showFurigana = SettingType(
-            SettingCategory.Lyrics,
-            "일본어 곡에 후리가나 표시",
-            "showFurigana",
-            SettingValueType.Boolean,
-            true
-        )
-        val showKoreanPronunciation = SettingType(
-            SettingCategory.Lyrics,
-            "일본어 곡에 한국어 발음 표시",
-            "showKoreanPronunciation",
-            SettingValueType.Boolean,
-            true
-        )
+//        val showFurigana = SettingType(
+//            SettingCategory.Lyrics,
+//            "일본어 곡에 후리가나 표시",
+//            "showFurigana",
+//            SettingValueType.Boolean,
+//            true
+//        )
+//        val showKoreanPronunciation = SettingType(
+//            SettingCategory.Lyrics,
+//            "일본어 곡에 한국어 발음 표시",
+//            "showKoreanPronunciation",
+//            SettingValueType.Boolean,
+//            true
+//        )
         val suggestPlaylist = SettingType(
             SettingCategory.TestFunction,
             "홈화면에 공개 플레이리스트 목록 표시",
@@ -67,8 +67,8 @@ class SettingType <T> (
             false
         )
         val entries = listOf(
-            showFurigana,
-            showKoreanPronunciation,
+//            showFurigana,
+//            showKoreanPronunciation,
             suggestPlaylist
         )
     }
@@ -88,8 +88,8 @@ fun SettingScreen(navController: NavController) {
     val context = LocalContext.current
 
     val settingValues = remember { mutableMapOf(
-        SettingType.showFurigana to mutableStateOf(SettingManager[context, SettingType.showFurigana]),
-        SettingType.showKoreanPronunciation to mutableStateOf(SettingManager[context, SettingType.showKoreanPronunciation]),
+//        SettingType.showFurigana to mutableStateOf(SettingManager[context, SettingType.showFurigana]),
+//        SettingType.showKoreanPronunciation to mutableStateOf(SettingManager[context, SettingType.showKoreanPronunciation]),
         SettingType.suggestPlaylist to mutableStateOf(SettingManager[context, SettingType.suggestPlaylist]),
     ) }
 

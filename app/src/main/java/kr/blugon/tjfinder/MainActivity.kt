@@ -21,13 +21,12 @@ import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.google.firebase.FirebaseApp
 import kotlinx.coroutines.launch
-import kr.blugon.tjfinder.module.LoginManager
+import kr.blugon.tjfinder.module.Top100Type
 import kr.blugon.tjfinder.module.User
 import kr.blugon.tjfinder.module.database.NewCacheDB
-import kr.blugon.tjfinder.module.database.PopularCacheDB
 import kr.blugon.tjfinder.module.database.SongCacheDB
+import kr.blugon.tjfinder.module.database.Top100CacheDB
 import kr.blugon.tjfinder.ui.layout.PretendardText
-import kr.blugon.tjfinder.ui.layout.TextConfirmCancelModal
 import kr.blugon.tjfinder.ui.layout.navigation.BottomNav
 import kr.blugon.tjfinder.ui.theme.Pretendard
 import kr.blugon.tjfinder.ui.theme.ThemeColor
@@ -57,12 +56,12 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-const val VERSION = "Beta 1.7.3"
+const val VERSION = "Beta 1.7.4"
 @Composable
 fun Greeting(mainActivity: MainActivity) {
     val context = LocalContext.current
     SongCacheDB(context).close()
-    PopularCacheDB(context).close()
+    Top100CacheDB(context).close()
     NewCacheDB(context).close()
     val navController = rememberNavController()
     val coroutineScope = rememberCoroutineScope()

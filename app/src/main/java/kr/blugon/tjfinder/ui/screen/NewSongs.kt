@@ -11,6 +11,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
+import kotlinx.coroutines.launch
 import kr.blugon.tjfinder.R
 import kr.blugon.tjfinder.module.*
 import kr.blugon.tjfinder.module.State
@@ -53,11 +54,11 @@ fun NewSongs(navController: NavController) {
         }
         if(states.songs.isNotEmpty()) return@LaunchedEffect
         state = State.LOADING
-        thread {
+        coroutineScope.launch {
             val data = SongManager.monthNew(context)
             if(data.isEmpty()) {
                 state = State.FAIL
-                return@thread
+                return@launch
             }
             states.songs.addAll(data)
             state = State.SUCCESS

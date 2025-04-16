@@ -33,7 +33,7 @@ fun LyricsLayout(
     var lyrics by remember { mutableStateOf(Lyrics("")) }
     LaunchedEffect(Unit) {
         CoroutineScope(Dispatchers.IO).launch {
-            lyrics = song.lyrics?: Lyrics("가사 불러오기 실패")
+//            lyrics = song.lyrics?: Lyrics("가사 불러오기 실패")
         }
     }
 

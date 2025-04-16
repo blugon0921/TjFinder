@@ -1,14 +1,6 @@
 package kr.blugon.tjfinder.module
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
-import kr.blugon.tjfinder.ui.layout.PretendardText
-import kr.blugon.tjfinder.ui.screen.child.user.SettingType
+import androidx.compose.runtime.Composable
 import kr.blugon.tjfinder.utils.convertToKoreanPronunciation
 import kr.blugon.tjfinder.utils.isJapanese
 
@@ -19,39 +11,39 @@ class Lyrics(
 
     @Composable
     fun Compose(fontSize: Float = 15f) {
-        val context = LocalContext.current
-        val showFurigana = SettingManager[context, SettingType.showFurigana]
-        val showKoreanPronunciation = SettingManager[context, SettingType.showKoreanPronunciation]
-
-        Column(modifier = Modifier.fillMaxSize()) {
-            textDataList.first.forEachIndexed { index, line ->
-                Row(modifier = Modifier.fillMaxWidth()) {
-                    if(line.first && showFurigana) {
-                        line.second.forEach { data->
-                            Column(
-                                verticalArrangement = Arrangement.Center,
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                            ) {
-                                PretendardText(data.reading?:"", fontSize = fontSize/2, textAlign = TextAlign.End)
-                                PretendardText(data.text, fontSize = fontSize, textAlign = TextAlign.Start, modifier = Modifier.offset(y= (-5).dp))
-                            }
-                        }
-                    } else {
-                        if(!line.second.isEmpty()) {
-//                            PretendardText(" ", fontSize = fontSize)
-                            line.second.forEach { data->
-                                PretendardText(data.text, fontSize = fontSize)
-                            }
-                        }
-                    }
-                }
-                if(!showKoreanPronunciation) return@forEachIndexed
-                val pronunciation = textDataList.second.getOrNull(index)
-                if(pronunciation != null) {
-                    PretendardText(pronunciation, fontSize = fontSize-3, modifier = Modifier.offset(y= (-5).dp))
-                }
-            }
-        }
+//        val context = LocalContext.current
+//        val showFurigana = SettingManager[context, SettingType.showFurigana]
+//        val showKoreanPronunciation = SettingManager[context, SettingType.showKoreanPronunciation]
+//
+//        Column(modifier = Modifier.fillMaxSize()) {
+//            textDataList.first.forEachIndexed { index, line ->
+//                Row(modifier = Modifier.fillMaxWidth()) {
+//                    if(line.first && showFurigana) {
+//                        line.second.forEach { data->
+//                            Column(
+//                                verticalArrangement = Arrangement.Center,
+//                                horizontalAlignment = Alignment.CenterHorizontally,
+//                            ) {
+//                                PretendardText(data.reading?:"", fontSize = fontSize/2, textAlign = TextAlign.End)
+//                                PretendardText(data.text, fontSize = fontSize, textAlign = TextAlign.Start, modifier = Modifier.offset(y= (-5).dp))
+//                            }
+//                        }
+//                    } else {
+//                        if(!line.second.isEmpty()) {
+////                            PretendardText(" ", fontSize = fontSize)
+//                            line.second.forEach { data->
+//                                PretendardText(data.text, fontSize = fontSize)
+//                            }
+//                        }
+//                    }
+//                }
+//                if(!showKoreanPronunciation) return@forEachIndexed
+//                val pronunciation = textDataList.second.getOrNull(index)
+//                if(pronunciation != null) {
+//                    PretendardText(pronunciation, fontSize = fontSize-3, modifier = Modifier.offset(y= (-5).dp))
+//                }
+//            }
+//        }
     }
 }
 

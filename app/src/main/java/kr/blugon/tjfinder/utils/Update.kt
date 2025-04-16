@@ -7,6 +7,9 @@ import android.os.Environment
 import android.widget.Toast
 import fuel.httpGet
 import kr.blugon.tjfinder.VERSION
+import kr.blugon.tjfinder.module.database.NewCacheDB
+import kr.blugon.tjfinder.module.database.SongCacheDB
+import kr.blugon.tjfinder.module.database.Top100CacheDB
 import org.json.JSONArray
 
 data class Version(
@@ -61,4 +64,7 @@ fun downloadApk(context: Context, version: Version) {
     downloadManager.enqueue(request)
 
     Toast.makeText(context, "다운로드를 시작합니다", Toast.LENGTH_SHORT).show()
+    SongCacheDB(context).clear()
+    NewCacheDB(context).clear()
+    Top100CacheDB(context).clear()
 }

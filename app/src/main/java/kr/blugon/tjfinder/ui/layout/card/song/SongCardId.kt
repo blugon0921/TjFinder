@@ -7,6 +7,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -47,14 +48,7 @@ fun SongCardId(
                 )
             }
         }
-        if(song.isMR) { //MR
-            PretendardText(
-                modifier = Modifier.width(45.dp).padding(end = 7.dp).clip(RoundedCornerShape(5.dp)).background(Color(0xFFff4a01)),
-                text = "MR",
-                fontWeight = FontWeight.SemiBold,
-                fontSize = 18f,
-                textAlign = TextAlign.Center
-            )
-        }
+        if(song.isMR) MRIcon()
+        if(song.isMV) MVIcon()
     }
 }
