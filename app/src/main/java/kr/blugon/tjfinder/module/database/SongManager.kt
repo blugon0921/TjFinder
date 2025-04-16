@@ -39,12 +39,18 @@ object SongManager {
             if(cache.isNotEmpty()) return cache
         }
 
-        val cacheDB = SongCacheDB(context)
-        TJApi.monthPopular(type).also {
-            cacheDB.addAll(it)
-            popularCacheDB[type] = it
-            saveUpdateAt(context, type.name)
-            return it
+        try {
+            val cacheDB = SongCacheDB(context)
+            TJApi.monthPopular(type).also {
+                cacheDB.addAll(it)
+                popularCacheDB[type] = it
+                saveUpdateAt(context, type.name)
+                return it
+            }
+        } catch (_: NullPointerException) {
+            SongCacheDB(context).clear()
+            Top100CacheDB(context).clear()
+            throw NullPointerException()
         }
     }
 
@@ -57,12 +63,18 @@ object SongManager {
             if(cache.isNotEmpty()) return cache
         }
 
-        val cacheDB = SongCacheDB(context)
-        TJApi.monthNew().also {
-            cacheDB.addAll(it)
-            newCacheDB.set(it)
-            saveUpdateAt(context, "new_month")
-            return it
+        try {
+            val cacheDB = SongCacheDB(context)
+            TJApi.monthNew().also {
+                cacheDB.addAll(it)
+                newCacheDB.set(it)
+                saveUpdateAt(context, "new_month")
+                return it
+            }
+        } catch (_: NullPointerException) {
+            SongCacheDB(context).clear()
+            NewCacheDB(context).clear()
+            throw NullPointerException()
         }
     }
 

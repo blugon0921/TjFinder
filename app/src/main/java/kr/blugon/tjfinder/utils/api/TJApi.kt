@@ -29,19 +29,7 @@ private fun String.jsoupHttpGet(parameters: Parameters): Connection {
         }"
     )
 }
-private fun String.url(parameters: Parameters): String {
-    return "$this?${
-            parameters.joinToString("&") {
-                "${
-                    URLEncoder.encode(it.first, Charset.forName("utf-8"))
-                }=${
-                    URLEncoder.encode(it.second, Charset.forName("utf-8"))
-                }"
-            }
-        }"
-}
 object TJApi {
-//    private const val URL = "https://www.tjmedia.com/tjsong"
     private const val URL = "https://tjmedia.com/legacy/api"
 
     private const val SEARCH_URL = "https://www.tjmedia.com/song/accompaniment_search"
@@ -50,14 +38,6 @@ object TJApi {
 
     operator fun get(id: Int): Song? = search("$id", StringType.Id, true).firstOrNull()
     fun search(keyword: String, type: StringType, match: Boolean = false): List<Song> {
-        println(SEARCH_URL.url(
-            parameters = listOf(
-                "strType" to type.code.toString(),
-                "searchTxt" to keyword,
-                "pageRowCnt" to "500",
-                "strWord" to if (match) "Y" else "N"
-            )
-        ))
         val jsoup = SEARCH_URL.jsoupHttpGet(
             parameters = listOf(
                 "strType" to type.code.toString(),
@@ -72,8 +52,6 @@ object TJApi {
             val song = document.select("#wrap > div > div > div.music.chart-top.type2 > div > ul > li:nth-child(${it + 2})").first()?: return@repeat
             val elements = song.firstElementChild()?: return@repeat
             if(elements.childrenSize() == 0) return@repeat
-            println(elements.child(0).child(0).child(1).text())
-            println(elements.child(0).child(0).child(1).text().toIntOrNull())
             songs.add(Song(
                 id = elements.child(0).child(0).child(1).text().toIntOrNull()?: return@repeat,
                 title = if(elements.child(1).child(0).child(0).hasClass("no-ico"))
