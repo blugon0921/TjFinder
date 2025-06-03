@@ -54,9 +54,7 @@ object TJApi {
             if(elements.childrenSize() == 0) return@repeat
             songs.add(Song(
                 id = elements.child(0).child(0).child(1).text().toIntOrNull()?: return@repeat,
-                title = if(elements.child(1).child(0).child(0).hasClass("no-ico"))
-                    elements.child(1).child(0).child(1).text()
-                else elements.child(1).child(0).child(2).text(),
+                title = elements.child(1).child(0).child(1).text(),
                 singer = elements.child(2).text(),
                 lyricist = elements.child(3).text(),
                 composer = elements.child(4).text(),

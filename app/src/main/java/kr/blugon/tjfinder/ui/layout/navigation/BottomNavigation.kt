@@ -175,7 +175,7 @@ fun BottomNav(navController: NavHostController, mainActivity: MainActivity) {
             NavigationBar(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(65.dp)
+                    .height(70.dp)
                     .clip(RoundedCornerShape(14.dp, 14.dp, 0.dp, 0.dp)),
                 containerColor = ThemeColor.Navigation
             ) {

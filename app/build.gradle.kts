@@ -9,14 +9,14 @@ plugins {
 
 android {
     namespace = "kr.blugon.tjfinder"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "kr.blugon.tjfinder"
         minSdk = 33
-        targetSdk = 34
-        versionCode = 22
-        versionName = "beta_v1.7.4"
+        targetSdk = 35
+        versionCode = 23
+        versionName = "beta_v1.7.5"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {

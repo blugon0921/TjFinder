@@ -1,5 +1,8 @@
 package kr.blugon.tjfinder.ui.screen.child.user
 
+import android.annotation.SuppressLint
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -10,6 +13,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -19,8 +23,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavController
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import kr.blugon.tjfinder.module.SettingManager
+import kr.blugon.tjfinder.module.database.NewCacheDB
+import kr.blugon.tjfinder.module.database.SongCacheDB
+import kr.blugon.tjfinder.module.database.Top100CacheDB
 import kr.blugon.tjfinder.ui.layout.PretendardText
+import kr.blugon.tjfinder.ui.layout.card.SettingButton
 import kr.blugon.tjfinder.ui.layout.card.SettingCard
 import kr.blugon.tjfinder.ui.layout.card.SettingItem
 
@@ -74,6 +84,29 @@ class SettingType <T> (
     }
 }
 
+class SettingButton(
+    val category: SettingCategory,
+    val name: String,
+    val action: (context: Context,scope: CoroutineScope) -> Unit
+) {
+    companion object {
+        val resetCache = SettingButton(
+            SettingCategory.Etc,
+            "캐시 삭제"
+        ) { context, scope ->
+            scope.launch {
+                NewCacheDB(context).clear()
+                SongCacheDB(context).clear()
+                Top100CacheDB(context).clear()
+                Toast.makeText(context, "캐시가 삭제되었습니다.", Toast.LENGTH_SHORT).show()
+            }
+        }
+        val entries = listOf(
+            resetCache
+        )
+    }
+}
+
 enum class SettingValueType {
     String,
     Int,
@@ -82,6 +115,7 @@ enum class SettingValueType {
     Boolean
 }
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingScreen(navController: NavController) {
@@ -91,7 +125,7 @@ fun SettingScreen(navController: NavController) {
 //        SettingType.showFurigana to mutableStateOf(SettingManager[context, SettingType.showFurigana]),
 //        SettingType.showKoreanPronunciation to mutableStateOf(SettingManager[context, SettingType.showKoreanPronunciation]),
         SettingType.suggestPlaylist to mutableStateOf(SettingManager[context, SettingType.suggestPlaylist]),
-    ) }
+    )}
 
 //    val keyboardManager = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
@@ -130,6 +164,10 @@ fun SettingScreen(navController: NavController) {
                     for(setting in SettingType.entries) {
                         if(setting.category != category) continue
                         SettingItem(setting, settingValues[setting]!!)
+                    }
+                    for(button in SettingButton.entries) {
+                        if(button.category != category) continue
+                        SettingButton(button)
                     }
                 }
             }

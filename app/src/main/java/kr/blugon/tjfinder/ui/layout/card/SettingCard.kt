@@ -1,6 +1,7 @@
 package kr.blugon.tjfinder.ui.layout.card
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Switch
@@ -8,6 +9,7 @@ import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -19,6 +21,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import kr.blugon.tjfinder.module.SettingManager
+import kr.blugon.tjfinder.ui.screen.child.user.SettingButton
 import kr.blugon.tjfinder.ui.screen.child.user.SettingType
 import kr.blugon.tjfinder.ui.screen.child.user.SettingValueType
 import kr.blugon.tjfinder.ui.theme.Pretendard
@@ -52,7 +55,6 @@ fun SettingCard(title: String, items: @Composable ColumnScope.() -> Unit) {
 }
 
 @Composable
-//fun <T> SettingItem(settingText: String, settingTrigger: @Composable RowScope.()->Unit) {
 fun <T> SettingItem(type: SettingType<T>, value: MutableState<T>) {
     val context = LocalContext.current
 
@@ -93,5 +95,28 @@ fun <T> SettingItem(type: SettingType<T>, value: MutableState<T>) {
                 )
             }
         }
+    }
+}
+@Composable
+fun SettingButton(button: SettingButton) {
+    val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
+
+    Row(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(10.dp)
+            .clickable { button.action(context, coroutineScope) },
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            modifier = Modifier,
+            text = button.name,
+            color = Color.White,
+            fontFamily = Pretendard,
+            fontWeight = FontWeight.SemiBold,
+            fontSize = TextUnit(16f, TextUnitType.Sp)
+        )
     }
 }
