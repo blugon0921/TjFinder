@@ -21,6 +21,7 @@ open class Song(
     open val composer: String,
     open val isMR: Boolean = false,
     open val isMV: Boolean = false,
+    open val isExclusive: Boolean = false,
     open val albumArtUrl: String? = null,
 ): Serializable {
     constructor(json: JSONObject): this(
@@ -31,6 +32,7 @@ open class Song(
         composer = json.getString("com"),
         isMR = json.getString("icongubun") == "MR",
         isMV = json.getString("mv_yn") == "Y",
+        isExclusive = json.getString("icongubun") == "60",
         albumArtUrl = if(json.isNull("imgthumb_path")) null
         else json.getString("imgthumb_path")
     )
@@ -42,6 +44,7 @@ open class Song(
         composer = cursor.getString("composer"),
         isMR = cursor.getBoolean("isMR"),
         isMV = cursor.getBoolean("isMV"),
+        isExclusive = cursor.getBoolean("isExclusive"),
         albumArtUrl = cursor.getStringOrNull("albumArtUrl")
     )
 
@@ -72,6 +75,7 @@ open class Song(
                 "composer": "${composer.replace("\\\"", "\\\\\"")}",
                 "isMR": $isMR,
                 "isMV": $isMV,
+                "isExclusive": $isExclusive,
                 "albumArtUrl": "${albumArtUrl?.replace("\\\"", "\\\\\"")}"
             }
         """.trimIndent()
@@ -88,8 +92,9 @@ open class Top100Song(
     override val composer: String,
     override val isMR: Boolean = false,
     override val isMV: Boolean = false,
+    override val isExclusive: Boolean = false,
     override val albumArtUrl: String? = null,
-): Song(id, title, singer, lyricist, composer, isMR, isMV, albumArtUrl) {
+): Song(id, title, singer, lyricist, composer, isMR, isMV, isExclusive, albumArtUrl) {
     constructor(type: Top100Type, rank: Int, song: Song) : this(
         type,
         rank,
@@ -100,6 +105,7 @@ open class Top100Song(
         song.composer,
         song.isMR,
         song.isMV,
+        song.isExclusive,
         song.albumArtUrl
     )
 }
@@ -112,9 +118,10 @@ class PlaylistSong(
     override val composer: String,
     override val isMR: Boolean = false,
     override val isMV: Boolean = false,
+    override val isExclusive: Boolean = false,
     override val albumArtUrl: String? = null,
     val playlist: Playlist
-): Song(id, title, singer, lyricist, composer, isMR, isMV, albumArtUrl) {
+): Song(id, title, singer, lyricist, composer, isMR, isMV, isExclusive, albumArtUrl) {
     constructor(song: Song, playlist: Playlist): this(
         song.id,
         song.title,
@@ -123,6 +130,7 @@ class PlaylistSong(
         song.composer,
         song.isMR,
         song.isMV,
+        song.isExclusive,
         song.albumArtUrl,
         playlist
     )
@@ -137,6 +145,7 @@ class PlaylistSong(
                 "composer": "${composer.replace("\\\"", "\\\\\"")}",
                 "isMR": $isMR,
                 "isMV": $isMV,
+                "isExclusive": $isExclusive,
                 "albumArtUrl": "${albumArtUrl?.replace("\\\"", "\\\\\"")}",
                 "playlistId": "${playlist.id}"
             }

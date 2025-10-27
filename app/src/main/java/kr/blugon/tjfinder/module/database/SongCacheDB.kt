@@ -25,6 +25,7 @@ class SongCacheDB(
                 composer TEXT,
                 isMR INTEGER,
                 isMV INTEGER,
+                isExclusive INTEGER,
                 albumArtUrl TEXT
             );
         """.trimIndent())
@@ -78,6 +79,7 @@ class SongCacheDB(
                 put("composer", it.composer)
                 put("isMR", if(it.isMR) 1 else 0)
                 put("isMV", if(it.isMV) 1 else 0)
+                put("isExclusive", if(it.isExclusive) 1 else 0)
                 put("albumArtUrl", it.albumArtUrl)
             })
         }

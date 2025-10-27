@@ -27,6 +27,7 @@ class Top100CacheDB(
                     composer TEXT,
                     isMR INTEGER,
                     isMV INTEGER,
+                    isExclusive INTEGER,
                     albumArtUrl TEXT
                 );
             """.trimIndent())
@@ -58,7 +59,7 @@ class Top100CacheDB(
             createTable(db)
             return listOf()
         }
-
+        
         if(cursor.moveToFirst()) {
             do {
                 songs.add(Top100Song(
@@ -87,6 +88,7 @@ class Top100CacheDB(
                 put("composer", it.composer)
                 put("isMR", if(it.isMR) 1 else 0)
                 put("isMV", if(it.isMV) 1 else 0)
+                put("isExclusive", if(it.isExclusive) 1 else 0)
                 put("albumArtUrl", it.albumArtUrl)
             })
         }

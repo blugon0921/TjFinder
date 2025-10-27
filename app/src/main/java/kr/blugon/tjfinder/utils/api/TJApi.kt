@@ -52,14 +52,20 @@ object TJApi {
             val song = document.select("#wrap > div > div > div.music.chart-top.type2 > div > ul > li:nth-child(${it + 2})").first()?: return@repeat
             val elements = song.firstElementChild()?: return@repeat
             if(elements.childrenSize() == 0) return@repeat
+            val icons = elements.child(1).child(0).child(0).children()
+            val isMR = (icons.first()?.child(0)?.classNames()?.contains("mr")?: false) ||
+                    (icons.getOrNull(1)?.child(0)?.classNames()?.contains("mr")?: false)
+            val isMV = icons.first()?.child(0)?.classNames()?.contains("mv")?: false
+            val isExclusive = icons.first()?.child(0)?.classNames()?.contains("exclusive")?: false
             songs.add(Song(
                 id = elements.child(0).child(0).child(1).text().toIntOrNull()?: return@repeat,
                 title = elements.child(1).child(0).child(1).text(),
                 singer = elements.child(2).text(),
                 lyricist = elements.child(3).text(),
                 composer = elements.child(4).text(),
-                isMR = elements.child(1).child(0).child(0).hasClass("mr"),
-                isMV = elements.child(1).child(0).child(0).hasClass("mv"),
+                isMR = isMR,
+                isMV = isMV,
+                isExclusive = isExclusive,
             ))
         }
         return songs

@@ -1,19 +1,15 @@
 package kr.blugon.tjfinder.ui.layout.card.song
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
-import androidx.compose.ui.unit.dp
 import kr.blugon.tjfinder.module.Song
 import kr.blugon.tjfinder.ui.layout.PretendardText
 import kr.blugon.tjfinder.ui.theme.Pretendard
@@ -29,7 +25,7 @@ fun SongCardId(
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth(0.7f),
+            modifier = Modifier.fillMaxWidth(0.4f),
             horizontalArrangement = Arrangement.Start
         ) {
             Text(
@@ -42,13 +38,18 @@ fun SongCardId(
             song.id.toString().splitHighlight(highlight).forEach {
                 PretendardText(
                     text = it,
-                    color = if(it.lowercase() == highlight?.lowercase()) highLightColor else Color.White,
+                    color = if(it.equals(highlight, ignoreCase = true)) highLightColor else Color.White,
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 18f
                 )
             }
         }
-        if(song.isMR) MRIcon()
-        if(song.isMV) MVIcon()
+        Row(
+            horizontalArrangement = Arrangement.End
+        ) {
+            if(song.isMR) MRIcon()
+            if(song.isMV) MVIcon()
+            if(song.isExclusive) ExclusiveIcon()
+        }
     }
 }

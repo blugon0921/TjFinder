@@ -1,23 +1,23 @@
 package kr.blugon.tjfinder.ui.layout.card.song
 
-import androidx.compose.foundation.*
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import kr.blugon.tjfinder.module.*
+import kr.blugon.tjfinder.module.PlaylistSong
+import kr.blugon.tjfinder.module.Song
+import kr.blugon.tjfinder.module.Top100Song
+import kr.blugon.tjfinder.module.User
 import kr.blugon.tjfinder.ui.layout.*
-import kr.blugon.tjfinder.ui.layout.BottomSheet
 import kr.blugon.tjfinder.ui.theme.ThemeColor
 import kr.blugon.tjfinder.utils.isApiServerOpened
 
@@ -106,6 +106,7 @@ fun SongCard(
                         PretendardText(text = song.title, fontSize = 20f) //제목
                         if(song.isMR) MRIcon()
                         if(song.isMV) MVIcon()
+                        if(song.isExclusive) ExclusiveIcon()
                     }
                 }
             },
@@ -144,7 +145,7 @@ fun String.splitHighlight(highlight: String?): List<String> {
             val highlightIndex = this@splitHighlight.lowercase().indexOf(highlight.lowercase())
             add(this@splitHighlight.substring(highlightIndex..<highlightIndex+highlight.length))
         }
-        removeLast()
+        removeLastOrNull()
         remove("")
     }
 }

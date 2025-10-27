@@ -56,13 +56,22 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-const val VERSION = "Beta 1.7.5"
+const val VERSION = "Beta 1.7.6"
 @Composable
 fun Greeting(mainActivity: MainActivity) {
     val context = LocalContext.current
     SongCacheDB(context).close()
-    Top100CacheDB(context).close()
-    NewCacheDB(context).close()
+    val top100CacheDB = Top100CacheDB(context)
+    val newCacheDB = NewCacheDB(context)
+    try {
+        top100CacheDB[Top100Type.K_POP]
+        newCacheDB.get()
+    } catch (e: IllegalStateException) {
+        top100CacheDB.clear()
+        newCacheDB.clear()
+    }
+    top100CacheDB.close()
+    newCacheDB.close()
     val navController = rememberNavController()
     val coroutineScope = rememberCoroutineScope()
 

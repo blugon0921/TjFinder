@@ -9,6 +9,7 @@ import kr.blugon.tjfinder.module.*
 import kr.blugon.tjfinder.utils.api.StringType
 import kr.blugon.tjfinder.utils.api.TJApi
 import java.time.LocalDateTime
+import kotlin.Exception
 
 fun Cursor.getInt(columnName: String) = getInt(getColumnIndex(columnName))
 fun Cursor.getString(columnName: String): String = getString(getColumnIndex(columnName))
@@ -47,10 +48,10 @@ object SongManager {
                 saveUpdateAt(context, type.name)
                 return it
             }
-        } catch (_: NullPointerException) {
+        } catch (e: Exception) {
             SongCacheDB(context).clear()
             Top100CacheDB(context).clear()
-            throw NullPointerException()
+            throw e
         }
     }
 
@@ -71,10 +72,10 @@ object SongManager {
                 saveUpdateAt(context, "new_month")
                 return it
             }
-        } catch (_: NullPointerException) {
+        } catch (e: Exception) {
             SongCacheDB(context).clear()
             NewCacheDB(context).clear()
-            throw NullPointerException()
+            throw e
         }
     }
 
