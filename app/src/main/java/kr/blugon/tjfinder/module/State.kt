@@ -11,6 +11,7 @@ enum class State {
 enum class SearchState {
     SUCCESS,
     NO_RESULT,
+    DEFAULT,
     SEARCHING,
     NOT_INTERNET_AVAILABLE
 }

@@ -89,38 +89,8 @@ fun EditPlaylistScreen(navController: NavController) {
     if(state == State.LOADING) return Loading("플레이리스트 편집중")
 
 
-    val retrofit = Retrofit
-        .Builder()
-        .baseUrl("${TjFinderApi.RequestURL}/")
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-        .create(FinderApi::class.java)
-
-    val launcher = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri ->
-        if (uri == null) return@rememberLauncherForActivityResult
-
-        val fileName = "${uri.toString().split("/").last()}.${context.contentResolver.getType(uri)!!.split("/").last()}"
-        val file = FileUtil.createTempFile(context, fileName)
-        FileUtil.copyToFile(context, uri, file)
-
-        val requestFile = file.asRequestBody("image/*".toMediaTypeOrNull())
-        val requestBody = MultipartBody.Part.createFormData("image", file.name, requestFile)
-
-        retrofit.sendImage(requestBody).enqueue(object: Callback<FinderResponse>{
-            override fun onResponse(call: Call<FinderResponse>, response: Response<FinderResponse>) {
-                val body = response.body()
-                if(response.isSuccessful && body?.code == 200) {
-                    thumbnail = body.imagePath!!
-                    Toast.makeText(context, "이미지 전송 성공", Toast.LENGTH_SHORT).show()
-                } else {
-                    if(response.message() == "Request Entity Too Large") {
-                        return Toast.makeText(context, "이미지가 너무 큽니다. 1MB까지 업로드 할 수 있습니다", Toast.LENGTH_SHORT).show()
-                    }
-                    Toast.makeText(context, "이미지 업로드 실패", Toast.LENGTH_SHORT).show()
-                }
-            }
-            override fun onFailure(call: Call<FinderResponse>, t: Throwable) = Toast.makeText(context, "이미지 업로드 실패", Toast.LENGTH_SHORT).show()
-        })
+    val launcher = FinderApi.imageUploader { imagePath ->
+        thumbnail = imagePath
     }
 
     val keyboardManager = LocalSoftwareKeyboardController.current
@@ -148,6 +118,7 @@ fun EditPlaylistScreen(navController: NavController) {
         },
         containerColor = Color.Transparent
     ) {
+        it
         Column (
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,

@@ -36,7 +36,8 @@ fun SongCardSinger(
 //                    .fillMaxWidth()
             .padding(10.dp, 0.dp)
             .clickable {
-                initValue = SearchInfo(song.singer)
+                val singer = song.singer.replace(Regex("\\(Feat\\..*?\\)"), "").trim()
+                initValue = SearchInfo(singer)
 //                navController.navigateScreen(BottomScreen.Search)
                 navController.navigateMainScreen(BottomScreen.Search, coroutineScope)
             },

@@ -1,8 +1,10 @@
 package kr.blugon.tjfinder.utils
 
+import android.annotation.TargetApi
 import android.app.DownloadManager
 import android.content.Context
 import android.net.Uri
+import android.os.Build
 import android.os.Environment
 import android.widget.Toast
 import fuel.httpGet
@@ -11,6 +13,7 @@ import kr.blugon.tjfinder.module.database.NewCacheDB
 import kr.blugon.tjfinder.module.database.SongCacheDB
 import kr.blugon.tjfinder.module.database.Top100CacheDB
 import org.json.JSONArray
+import androidx.core.net.toUri
 
 data class Version(
     val version: String,
@@ -53,11 +56,11 @@ fun isLatestVersion(latest: Version): Boolean {
 
 fun downloadApk(context: Context, version: Version) {
     val fileName = "TjFinder-${version.version}.apk"
-    val request = DownloadManager.Request(Uri.parse(version.downloadUrl)).apply {
+    val request = DownloadManager.Request(version.downloadUrl.toUri()).apply {
         setTitle(fileName)
         setDescription("다운로드중...")
         setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-        setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName)
+        setDestinationInExternalFilesDir(context, Environment.DIRECTORY_DOWNLOADS, fileName)
     }
 
     val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager

@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -9,14 +11,14 @@ plugins {
 
 android {
     namespace = "kr.blugon.tjfinder"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "kr.blugon.tjfinder"
         minSdk = 33
         targetSdk = 35
-        versionCode = 24
-        versionName = "beta_v1.7.6"
+        versionCode = 25
+        versionName = "beta_v1.7.7"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -31,11 +33,13 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
-    kotlinOptions {
-        jvmTarget = "1.8"
+    kotlin {
+        compilerOptions {
+            jvmTarget = JvmTarget.JVM_21
+        }
     }
     buildFeatures {
         compose = true
@@ -55,16 +59,18 @@ android {
 dependencies {
     implementation(libs.coreKtx)
     implementation(libs.lifecycleRuntimeKtx)
-    implementation(libs.activityCompose)
-    implementation(platform(libs.composeBom))
-    androidTestImplementation(platform(libs.composeBom))
+    implementation(libs.compose.activity)
+    implementation(platform(libs.compose.bom))
+    androidTestImplementation(platform(libs.compose.bom))
+    implementation(libs.compose.navigation)
+    implementation(libs.compose.icons)
+//    implementation(libs.compose.icons.extended)
     implementation(libs.ui)
     implementation(libs.uiGraphics)
     implementation(libs.uiToolingPreview)
     debugImplementation(libs.uiTooling)
     debugImplementation(libs.uiTestManifest)
     implementation(libs.material3)
-    implementation(libs.navigationCompose)
     implementation(libs.json)
     implementation(libs.securityCryptoKtx)
     implementation("${libs.securityCryptoKtx.get().group}:${libs.securityCryptoKtx.get().name}:1.1.0-alpha06")
@@ -77,7 +83,7 @@ dependencies {
 
     implementation(libs.firebaseAuth)
     implementation(libs.playServicesAuth)
-    implementation("com.google.gms:google-services:4.4.2")
+    implementation("com.google.gms:google-services:4.4.4")
 
     implementation(libs.coilCompose)
 
@@ -88,7 +94,6 @@ dependencies {
     implementation(libs.gson)
     implementation(libs.converterGson)
     implementation(libs.moshi)
-//    implementation("com.google.gms:google-services:4.4.2")
 //    implementation("com.google.android.gms:play-services-ads:23.1.0")
 
     implementation(libs.sqlite)

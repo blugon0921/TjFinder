@@ -14,6 +14,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import kr.blugon.tjfinder.ui.theme.Pretendard
 
 @Composable
@@ -37,6 +39,7 @@ fun PretendardText(
         maxLines = maxLines,
         modifier = modifier,
         textAlign = textAlign,
+        lineHeight = (fontSize*1.2).sp
     )
 }
 

@@ -5,7 +5,6 @@ import kr.blugon.tjfinder.module.database.getBoolean
 import kr.blugon.tjfinder.module.database.getInt
 import kr.blugon.tjfinder.module.database.getString
 import kr.blugon.tjfinder.module.database.getStringOrNull
-import kr.blugon.tjfinder.ui.layout.lyricsList
 import org.json.JSONObject
 import org.jsoup.Jsoup
 import java.io.Serializable

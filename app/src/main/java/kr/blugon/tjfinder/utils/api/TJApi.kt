@@ -1,20 +1,22 @@
 package kr.blugon.tjfinder.utils.api
 
 import android.annotation.SuppressLint
-import android.os.Build
-import androidx.annotation.RequiresApi
-import fuel.Parameters
-import fuel.httpGet
-import kr.blugon.tjfinder.module.OtherUser
+import fuel.Fuel
 import kr.blugon.tjfinder.module.Song
-import kr.blugon.tjfinder.module.Top100Type
 import kr.blugon.tjfinder.module.Top100Song
+import kr.blugon.tjfinder.module.Top100Type
 import org.json.JSONObject
 import org.jsoup.Connection
 import org.jsoup.Jsoup
 import java.net.URLEncoder
 import java.nio.charset.Charset
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.*
+import fuel.Parameters
+import fuel.get
+import fuel.httpGet
 
 private fun String.jsoupHttpGet(parameters: Parameters): Connection {
     return Jsoup.connect(
@@ -41,33 +43,36 @@ object TJApi {
         val jsoup = SEARCH_URL.jsoupHttpGet(
             parameters = listOf(
                 "strType" to type.code.toString(),
-                "searchTxt" to keyword,
+                "searchTxt" to keyword.replace(" ", ""),
                 "pageRowCnt" to "500",
-                "strWord" to if (match) "Y" else "N"
+                "strWord" to if (match && type != StringType.Id) "Y" else "N"
             )
         ).timeout(10000)
         val document = jsoup.get()
         val songs = ArrayList<Song>()
-        repeat((document.select("#wrap > div > div > div.music.chart-top.type2 > div > ul").first()?.childrenSize() ?: return listOf()) -1) {
-            val song = document.select("#wrap > div > div > div.music.chart-top.type2 > div > ul > li:nth-child(${it + 2})").first()?: return@repeat
-            val elements = song.firstElementChild()?: return@repeat
-            if(elements.childrenSize() == 0) return@repeat
-            val icons = elements.child(1).child(0).child(0).children()
-            val isMR = (icons.first()?.child(0)?.classNames()?.contains("mr")?: false) ||
-                    (icons.getOrNull(1)?.child(0)?.classNames()?.contains("mr")?: false)
-            val isMV = icons.first()?.child(0)?.classNames()?.contains("mv")?: false
-            val isExclusive = icons.first()?.child(0)?.classNames()?.contains("exclusive")?: false
-            songs.add(Song(
-                id = elements.child(0).child(0).child(1).text().toIntOrNull()?: return@repeat,
-                title = elements.child(1).child(0).child(1).text(),
-                singer = elements.child(2).text(),
-                lyricist = elements.child(3).text(),
-                composer = elements.child(4).text(),
-                isMR = isMR,
-                isMV = isMV,
-                isExclusive = isExclusive,
-            ))
-        }
+        try {
+            repeat((document.select("#wrap > div > div > div.music.chart-top.type2 > div > ul").first()?.childrenSize()?: return listOf()) -1) {
+                val song = document.select("#wrap > div > div > div.music.chart-top.type2 > div > ul > li:nth-child(${it + 2})").first()?: return@repeat
+                if(song.firstElementChild()?.classNames()?.contains("no-date") != false) return@repeat
+                val elements = song.firstElementChild()?: return@repeat
+                if(elements.childrenSize() == 0) return@repeat
+                val icons = elements.child(1).child(0).child(0).children()
+                val isMR = (icons.first()?.child(0)?.classNames()?.contains("mr")?: false) ||
+                        (icons.getOrNull(1)?.child(0)?.classNames()?.contains("mr")?: false)
+                val isMV = icons.first()?.child(0)?.classNames()?.contains("mv")?: false
+                val isExclusive = icons.first()?.child(0)?.classNames()?.contains("exclusive")?: false
+                songs.add(Song(
+                    id = elements.child(0).child(0).child(1).text().toIntOrNull()?: return@repeat,
+                    title = elements.child(1).child(0).child(1).text(),
+                    singer = elements.child(2).text(),
+                    lyricist = elements.child(3).text(),
+                    composer = elements.child(4).text(),
+                    isMR = isMR,
+                    isMV = isMV,
+                    isExclusive = isExclusive,
+                ))
+            }
+        } catch (_: IndexOutOfBoundsException) {}
         return songs
     }
 
@@ -76,7 +81,13 @@ object TJApi {
     fun searchWithSinger(singer: String, match: Boolean = false): List<Song> = search(singer, StringType.Singer, match)
 
     suspend fun monthPopular(type: Top100Type = Top100Type.K_POP): List<Top100Song> {
-        val response = TOP_URL.httpGet(parameters = listOf("strType" to type.code.toString()))
+        val startDate = LocalDate.now().withDayOfMonth(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+        val endDate = SimpleDateFormat("yyyy-MM-dd", Locale.KOREA).format(System.currentTimeMillis())
+        val response = TOP_URL.httpGet(parameters = listOf(
+            "strType" to type.code.toString(),
+            "searchStartDate" to startDate,
+            "searchEndDate" to endDate
+        ))
         val songList = ArrayList<Top100Song>()
         if(response.statusCode != 200) return songList
         val json = JSONObject(response.body)

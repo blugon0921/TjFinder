@@ -29,7 +29,6 @@ fun SongBottomItems(
     song: Song,
     user: User?,
     showBottomSheet: MutableState<Boolean>,
-    showLyrics: MutableState<Boolean>,
     navController: NavController,
 ) {
     val context = LocalContext.current

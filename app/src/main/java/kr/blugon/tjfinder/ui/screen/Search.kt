@@ -37,6 +37,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
@@ -237,7 +238,7 @@ fun Search(navController: NavController) {
                             }
                             input = it
                             results.clear()
-                            if(it.isBlank()) return@BasicTextField
+                            if(it.isBlank()) states.setAll(SearchState.DEFAULT)
                         },
                         keyboardOptions = KeyboardOptions(
                             keyboardType = KeyboardType.Text,
@@ -292,7 +293,7 @@ fun Search(navController: NavController) {
                             onClick = {
                                 input = ""
                                 results.clear()
-                                states.setAll(SearchState.NO_RESULT)
+                                states.setAll(SearchState.DEFAULT)
                                 focusRequester.requestFocus()
                             },
                         )
@@ -330,13 +331,13 @@ fun Search(navController: NavController) {
                     when(sort.song) {
                         SongSortType.ID -> results.song.sortBy { it.id }
                         SongSortType.TITLE -> results.song.sortBy {
-                            if(it.title.lowercase() == input.lowercase()) "!1${it.title}"
+                            if(it.title.equals(input, ignoreCase = true)) "!1${it.title}"
                             else if(it.title.lowercase().startsWith(input.lowercase())) "!2${it.title}"
                             else if(it.title.lowercase().contains(input.lowercase())) "!3${it.title}"
                             else "!4${it.title}"
                         }
                         SongSortType.SINGER -> results.song.sortBy {
-                            if(it.singer.lowercase() == input.lowercase()) "!1${it.singer}"
+                            if(it.singer.equals(input, ignoreCase = true)) "!1${it.singer}"
                             else if(it.singer.lowercase().startsWith(input.lowercase())) "!2${it.singer}"
                             else if(it.singer.lowercase().contains(input.lowercase())) "!3${it.singer}"
                             else "!4${it.singer}"
@@ -421,12 +422,14 @@ fun Search(navController: NavController) {
                                 text = when(states[category]) {
                                     SearchState.NO_RESULT -> "검색 결과 없음"
                                     SearchState.SUCCESS -> "성공" //나올 일 없음
+                                    SearchState.DEFAULT -> "가요, 팝송, 일본곡을\n제외한 외국곡의 검색을\n지원하지 않습니다"
                                     SearchState.SEARCHING -> "검색중..."
                                     SearchState.NOT_INTERNET_AVAILABLE -> "네트워크에 연결되지 않았어요:("
                                 },
                                 fontSize = if(states[category] == SearchState.NOT_INTERNET_AVAILABLE) 20f else 30f,
                                 fontWeight = FontWeight.Normal,
-                                color = ThemeColor.Main
+                                color = ThemeColor.Main,
+                                textAlign = TextAlign.Center
                             )
                             if(states[category] == SearchState.SEARCHING) {
                                 CircularProgressIndicator(

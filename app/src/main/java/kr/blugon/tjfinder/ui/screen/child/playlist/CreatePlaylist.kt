@@ -1,8 +1,6 @@
 package kr.blugon.tjfinder.ui.screen.child.playlist
 
 import android.widget.Toast
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -35,20 +33,12 @@ import kr.blugon.tjfinder.ui.layout.state.NotConnectedNetwork
 import kr.blugon.tjfinder.ui.screen.child.EditTextField
 import kr.blugon.tjfinder.ui.theme.ThemeColor
 import kr.blugon.tjfinder.utils.api.FinderApi
-import kr.blugon.tjfinder.utils.api.FinderResponse
-import kr.blugon.tjfinder.utils.api.TjFinderApi
 import kr.blugon.tjfinder.utils.api.finder.createPlaylist
 import kr.blugon.tjfinder.utils.api.finder.editThumbnailOfPlaylist
 import kr.blugon.tjfinder.utils.api.finder.playlists
 import kr.blugon.tjfinder.utils.isInternetAvailable
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.MultipartBody
-import okhttp3.RequestBody.Companion.asRequestBody
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import kotlin.random.Random
+import kotlin.random.nextInt
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -64,7 +54,7 @@ fun CreatePlaylist(navController: NavController) {
     var defaultTitle by remember { mutableStateOf("플레이리스트#") }
     val title = remember { mutableStateOf(defaultTitle) }
 
-    val defaultThumbnail = "https://file.blugon.kr/image/tjfinder/defaultthumbnails/${Math.round(Math.random()*4)+1}.png"
+    val defaultThumbnail = "https://file.blugon.kr/image/tjfinder/defaultthumbnails/${Random.nextInt(1..5)}.png"
     var thumbnail by remember { mutableStateOf(defaultThumbnail) }
 
     LaunchedEffect(Unit) {
@@ -83,38 +73,8 @@ fun CreatePlaylist(navController: NavController) {
     if(state == State.DEFAULT || state == State.NOT_INTERNET_AVAILABLE) return NotConnectedNetwork()
     if(state == State.LOADING) return Loading("플레이리스트 생성중")
 
-    val retrofit = Retrofit
-        .Builder()
-        .baseUrl("${TjFinderApi.RequestURL}/")
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-        .create(FinderApi::class.java)
-
-    val launcher = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri ->
-        if (uri == null) return@rememberLauncherForActivityResult
-
-        val fileName = "${uri.toString().split("/").last()}.${context.contentResolver.getType(uri)!!.split("/").last()}"
-        val file = FileUtil.createTempFile(context, fileName)
-        FileUtil.copyToFile(context, uri, file)
-
-        val requestFile = file.asRequestBody("image/*".toMediaTypeOrNull())
-        val body = MultipartBody.Part.createFormData("image", file.name, requestFile)
-
-        retrofit.sendImage(body).enqueue(object: Callback<FinderResponse> {
-            override fun onResponse(call: Call<FinderResponse>, response: Response<FinderResponse>) {
-                val body = response.body()
-                if(response.isSuccessful && body?.code == 200) {
-                    thumbnail = body.imagePath!!
-                    Toast.makeText(context, "이미지 전송 성공", Toast.LENGTH_SHORT).show()
-                } else {
-                    if(response.message() == "Request Entity Too Large") {
-                        return Toast.makeText(context, "이미지가 너무 큽니다. 1MB까지 업로드 할 수 있습니다", Toast.LENGTH_SHORT).show()
-                    }
-                    Toast.makeText(context, "이미지 업로드 실패", Toast.LENGTH_SHORT).show()
-                }
-            }
-            override fun onFailure(call: Call<FinderResponse>, t: Throwable) = Toast.makeText(context, "이미지 업로드 실패", Toast.LENGTH_SHORT).show()
-        })
+    val launcher = FinderApi.imageUploader { imagePath ->
+        thumbnail = imagePath
     }
 
     val keyboardManager = LocalSoftwareKeyboardController.current
@@ -142,6 +102,7 @@ fun CreatePlaylist(navController: NavController) {
         },
         containerColor = Color.Transparent
     ) {
+        it
         Column (
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,

@@ -86,7 +86,6 @@ fun SongCard(
     }
 
     val sheetState = rememberModalBottomSheetState()
-    val showLyrics = remember { mutableStateOf(false) }
     if(showBottomSheet.value) {
         BottomSheet(
             sheetState = sheetState,
@@ -111,11 +110,8 @@ fun SongCard(
                 }
             },
         ) {
-            SongBottomItems(song = song, user = user, showBottomSheet = showBottomSheet, showLyrics, navController = navController)
+            SongBottomItems(song = song, user = user, showBottomSheet = showBottomSheet, navController = navController)
         }
-    }
-    if(showLyrics.value) {
-        LyricsLayout(song, showLyrics)
     }
 }
 

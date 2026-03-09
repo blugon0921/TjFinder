@@ -96,34 +96,8 @@ fun EditUserScreen(navController: NavController) {
     if(state == State.DEFAULT) return Loading("유저 설정 불러오는중")
     if(state == State.LOADING) return Loading("유저 설정 저장중")
 
-
-    val retrofit = Retrofit
-        .Builder()
-        .baseUrl("${TjFinderApi.RequestURL}/")
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-        .create(FinderApi::class.java)
-
-    val launcher = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri ->
-        if (uri == null) return@rememberLauncherForActivityResult
-
-        val fileName = "${uri.toString().split("/").last()}.${context.contentResolver.getType(uri)!!.split("/").last()}"
-        val file = FileUtil.createTempFile(context, fileName)
-        FileUtil.copyToFile(context, uri, file)
-
-        val requestFile = file.asRequestBody("image/*".toMediaTypeOrNull())
-        val requestBody = MultipartBody.Part.createFormData("image", file.name, requestFile)
-
-        retrofit.sendImage(requestBody).enqueue(object: Callback<FinderResponse> {
-            override fun onResponse(call: Call<FinderResponse>, response: Response<FinderResponse>) {
-                val body = response.body()
-                if(response.isSuccessful && body?.code == 200) {
-                    profileImage.value = body.imagePath!!
-                    Toast.makeText(context, "이미지 전송 성공", Toast.LENGTH_SHORT).show()
-                } else Toast.makeText(context, "이미지 업로드 실패", Toast.LENGTH_SHORT).show()
-            }
-            override fun onFailure(call: Call<FinderResponse>, t: Throwable) = Toast.makeText(context, "이미지 업로드 실패", Toast.LENGTH_SHORT).show()
-        })
+    val launcher = FinderApi.imageUploader { imagePath ->
+        profileImage.value = imagePath
     }
 
     val keyboardManager = LocalSoftwareKeyboardController.current
@@ -152,6 +126,7 @@ fun EditUserScreen(navController: NavController) {
         },
         containerColor = Color.Transparent
     ) {
+        it
         Column (
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,

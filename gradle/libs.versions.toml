@@ -1,14 +1,15 @@
 [versions]
-kotlin = "2.1.20"
-android = "8.2.2"
-google_services = "4.4.2"
+kotlin = "2.3.10"
+android = "8.12.3"
+google_services = "4.4.4"
 #lib
-coreKtx = "1.13.1"
-lifecycleRuntimeKtx = "2.8.6"
-activityCompose = "1.9.3"
-composeBom = "2024.10.00"
-navigationCompose = "2.8.3"
-json = "20240205"
+coreKtx = "1.17.0"
+lifecycleRuntimeKtx = "2.10.0"
+activityCompose = "1.12.4"
+composeBom = "2026.02.01"
+navigationCompose = "2.9.7"
+composeIcons = "latest.release"
+json = "20251224"
 securityCryptoKtx = "1.0.0"
 junit = "4.13.2"
 extJunit = "1.2.1"
@@ -29,7 +30,6 @@ gson = "2.11.0"
 moshi = "latest.release"
 
 sqlite = "2.5.0-alpha10"
-room = "2.6.1"
 
 jsoup = "1.18.1"
 kuromoji = "latest.release"
@@ -43,15 +43,17 @@ googleServices = { id = "com.google.gms.google-services", version.ref = "google_
 [libraries]
 coreKtx = { module = "androidx.core:core-ktx", version.ref = "coreKtx" }
 lifecycleRuntimeKtx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
-activityCompose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
-composeBom = { module = "androidx.compose:compose-bom", version.ref = "composeBom" }
+compose-activity = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
+compose-bom = { module = "androidx.compose:compose-bom", version.ref = "composeBom" }
+compose-navigation = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
+compose-icons = { module = "androidx.compose.material:material-icons-core", version.ref = "composeIcons" }
+#compose-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "composeIcons" }
 ui = { module = "androidx.compose.ui:ui" }
 uiGraphics = { module = "androidx.compose.ui:ui-graphics" }
 uiToolingPreview = { module = "androidx.compose.ui:ui-tooling-preview" }
 uiTooling = { module = "androidx.compose.ui:ui-tooling" }
 uiTestManifest = { module = "androidx.compose.ui:ui-test-manifest" }
 material3 = { module = "androidx.compose.material3:material3" }
-navigationCompose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 json = { module = "org.json:json", version.ref = "json" }
 securityCryptoKtx = { module = "androidx.security:security-crypto-ktx", version.ref = "securityCryptoKtx" }
 junit = { module = "junit:junit", version.ref = "junit" }
@@ -75,10 +77,6 @@ gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 moshi = { module = "com.squareup.moshi:moshi", version.ref = "moshi" }
 
 sqlite = { module = "androidx.sqlite:sqlite", version.ref = "sqlite"}
-
-roomRuntime = { module = "androidx.room:room-runtime", version.ref = "room" }
-roomCompiler = { module = "androidx.room:room-compiler", version.ref = "room" }
-roomKtx = { module = "androidx.room:room-ktx", version.ref = "room" }
 
 jsoup = { module = "org.jsoup:jsoup", version.ref = "jsoup" }
 kuromoji = { module = "com.atilika.kuromoji:kuromoji-ipadic", version.ref = "kuromoji" }

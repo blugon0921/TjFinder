@@ -56,7 +56,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-const val VERSION = "Beta 1.7.6"
+const val VERSION = "Beta 1.7.7"
 @Composable
 fun Greeting(mainActivity: MainActivity) {
     val context = LocalContext.current

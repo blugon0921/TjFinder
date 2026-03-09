@@ -5,7 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import kr.blugon.tjfinder.module.SearchState
 
 data class SearchStates(
-    var song: SearchState = SearchState.NO_RESULT,
+    var song: SearchState = SearchState.DEFAULT,
     var playlist: SearchState = SearchState.NO_RESULT,
     var user: SearchState = SearchState.NO_RESULT,
 ) {
@@ -38,7 +38,7 @@ data class SearchStates(
 }
 
 data class StatedSearchStates(
-    val song: MutableState<SearchState> = mutableStateOf(SearchState.NO_RESULT),
+    val song: MutableState<SearchState> = mutableStateOf(SearchState.DEFAULT),
     val playlist: MutableState<SearchState> = mutableStateOf(SearchState.NO_RESULT),
     val user: MutableState<SearchState> = mutableStateOf(SearchState.NO_RESULT),
 ) {

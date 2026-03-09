@@ -70,7 +70,10 @@ fun PlaylistCard(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Start,
     ) {
-        PlaylistThumbnail(modifier = Modifier.padding(start = 10.dp), playlist = if(!isMine) playlist else playlist.toMine()) //썸네일
+        PlaylistThumbnail(
+            modifier = Modifier.padding(start = 10.dp, top = 5.dp, bottom = 5.dp),
+            playlist = if(!isMine) playlist else playlist.toMine()
+        ) //썸네일
         Column(modifier = Modifier.fillMaxSize()) {
             ScrollingPlaylistTitle( //제목
                 modifier = Modifier
